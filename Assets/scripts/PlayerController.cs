@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public int health = 100;
 
+
 	private Rigidbody rb;
 
 	// Use this for initialization
