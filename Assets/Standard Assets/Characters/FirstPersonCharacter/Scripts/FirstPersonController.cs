@@ -10,37 +10,44 @@ namespace UnityStandardAssets.Characters.FirstPerson
     [RequireComponent(typeof (AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
-        [SerializeField] private bool m_IsWalking;
-        [SerializeField] private float m_WalkSpeed;
-        [SerializeField] private float m_RunSpeed;
-        [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
-        [SerializeField] private float m_JumpSpeed;
-        [SerializeField] private float m_StickToGroundForce;
-        [SerializeField] private float m_GravityMultiplier;
-        [SerializeField] private MouseLook m_MouseLook;
-        [SerializeField] private bool m_UseFovKick;
-        [SerializeField] private FOVKick m_FovKick = new FOVKick();
-        [SerializeField] private bool m_UseHeadBob;
-        [SerializeField] private CurveControlledBob m_HeadBob = new CurveControlledBob();
-        [SerializeField] private LerpControlledBob m_JumpBob = new LerpControlledBob();
-        [SerializeField] private float m_StepInterval;
-        [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
-        [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
-        [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        [SerializeField] protected bool m_IsWalking;
+        [SerializeField] protected float m_WalkSpeed;
+        [SerializeField] protected float m_RunSpeed;
+        [SerializeField] [Range(0f, 1f)] protected float m_RunstepLenghten;
+        [SerializeField] protected float m_JumpSpeed;
+        [SerializeField] protected float m_StickToGroundForce;
+        [SerializeField] protected float m_GravityMultiplier;
+        [SerializeField] protected MouseLook _m_MouseLook;
+        [SerializeField] protected bool m_UseFovKick;
+        [SerializeField] protected FOVKick m_FovKick = new FOVKick();
+        [SerializeField] protected bool m_UseHeadBob;
+        [SerializeField] protected CurveControlledBob m_HeadBob = new CurveControlledBob();
+        [SerializeField] protected LerpControlledBob m_JumpBob = new LerpControlledBob();
+        [SerializeField] protected float m_StepInterval;
+        [SerializeField] protected AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
+        [SerializeField] protected AudioClip m_JumpSound;           // the sound played when character leaves the ground.
+        [SerializeField] protected AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
-        private Camera m_Camera;
-        private bool m_Jump;
-        private float m_YRotation;
-        private Vector2 m_Input;
-        private Vector3 m_MoveDir = Vector3.zero;
-        private CharacterController m_CharacterController;
-        private CollisionFlags m_CollisionFlags;
-        private bool m_PreviouslyGrounded;
-        private Vector3 m_OriginalCameraPosition;
-        private float m_StepCycle;
-        private float m_NextStep;
-        private bool m_Jumping;
-        private AudioSource m_AudioSource;
+        protected Camera m_Camera;
+        protected bool m_Jump;
+        protected float m_YRotation;
+        protected Vector2 m_Input;
+        protected Vector3 m_MoveDir = Vector3.zero;
+        protected CharacterController m_CharacterController;
+        protected CollisionFlags m_CollisionFlags;
+        protected bool m_PreviouslyGrounded;
+        protected Vector3 m_OriginalCameraPosition;
+        protected float m_StepCycle;
+        protected float m_NextStep;
+        protected bool m_Jumping;
+        protected AudioSource m_AudioSource;
+
+
+		protected virtual MouseLook m_MouseLook {
+			get {
+				return _m_MouseLook;
+				}
+		}
 
         // Use this for initialization
         private void Start()
@@ -168,12 +175,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             // pick & play a random footstep sound from the array,
             // excluding sound at index 0
-            int n = Random.Range(1, m_FootstepSounds.Length);
-            m_AudioSource.clip = m_FootstepSounds[n];
-            m_AudioSource.PlayOneShot(m_AudioSource.clip);
-            // move picked sound to index 0 so it's not picked next time
-            m_FootstepSounds[n] = m_FootstepSounds[0];
-            m_FootstepSounds[0] = m_AudioSource.clip;
+//            int n = Random.Range(1, m_FootstepSounds.Length);
+//            m_AudioSource.clip = m_FootstepSounds[n];
+//            m_AudioSource.PlayOneShot(m_AudioSource.clip);
+//            // move picked sound to index 0 so it's not picked next time
+//            m_FootstepSounds[n] = m_FootstepSounds[0];
+//            m_FootstepSounds[0] = m_AudioSource.clip;
         }
 
 
@@ -201,7 +208,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-        private void GetInput(out float speed)
+        protected virtual void GetInput(out float speed)
         {
             // Read input
             float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");

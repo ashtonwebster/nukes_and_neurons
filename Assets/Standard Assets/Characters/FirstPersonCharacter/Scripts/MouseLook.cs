@@ -20,6 +20,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Quaternion m_CharacterTargetRot;
         private Quaternion m_CameraTargetRot;
         private bool m_cursorIsLocked = true;
+		// exposed to AIMouseLook
+		protected float yInput;
+		protected float xInput;
 
         public void Init(Transform character, Transform camera)
         {
@@ -27,12 +30,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_CameraTargetRot = camera.localRotation;
         }
 
+		/// <summary>
+		/// sets the rotation x and y values.  This allows the AIMouseLook to overwrite
+		/// the values
+		/// </summary>
+		protected virtual void GetRotationInput() {
+			this.yInput = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
+            this.xInput = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+		}
 
         public void LookRotation(Transform character, Transform camera)
         {
-            float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-            float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
-
+			this.GetRotationInput ();
+			float xRot = this.xInput * XSensitivity;
+			float yRot = this.yInput * YSensitivity;
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
             m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
 
