@@ -22,17 +22,14 @@ public class RandomGoalMover : MonoBehaviour {
 	void Start () {
 		goalState = Instantiate (goalState);
 		goalState.transform.localPosition = new Vector3 (Random.value * 10, 4, Random.value * 10);
-		NeuralNetwork network = new NeuralNetwork ();
-		network.RunXORNetwork ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		// restart on click
+		// restart on click (place the goal in a new position)
 		if (Input.GetMouseButtonDown (0)) {
 			GameObject.Destroy (goalState);
 			this.Start ();
-			//SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 		}
 	}
 }

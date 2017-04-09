@@ -32,7 +32,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 		/// <summary>
 		/// sets the rotation x and y values.  This allows the AIMouseLook to overwrite
-		/// the values
+		/// the values.  This might be the opposite of what you expect for x and y,
+		/// but you are rotating AROUND these AXES, not the direction of the movement.
 		/// </summary>
 		protected virtual void GetRotationInput() {
 			this.yInput = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;

@@ -8,7 +8,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 {
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
-    public class FirstPersonController : MonoBehaviour
+    public class GenericFirstPersonController : MonoBehaviour
     {
         [SerializeField] protected bool m_IsWalking;
         [SerializeField] protected float m_WalkSpeed;
@@ -42,7 +42,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
 
-
 		protected virtual MouseLook m_MouseLook {
 			get {
 				return _m_MouseLook;
@@ -50,7 +49,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 		}
 
         // Use this for initialization
-        private void Start()
+        protected virtual void Start()
         {
             m_CharacterController = GetComponent<CharacterController>();
             m_Camera = Camera.main;
@@ -66,7 +65,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 
         // Update is called once per frame
-        private void Update()
+        protected virtual void Update()
         {
             RotateView();
             // the jump state needs to read here to make sure it is not missed

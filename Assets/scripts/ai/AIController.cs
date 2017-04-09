@@ -3,10 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public class AIController : FirstPersonController {
+public class AIController : GenericFirstPersonController {
 
 	//this may ignore the public settings...
-	protected AIMouseLook _m_AIMouseLook = new AIMouseLook();
+	protected AIMouseLook _m_AIMouseLook;
+	private NeuralNetwork network;
+
+	protected override void Start() { 
+		// train the model based on previous input
+		this.network = new NeuralNetwork();
+		//string trainingDir = System.Environment.GetEnvironmentVariable ("TRAINING_DIR");
+		network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/yrot_good_test_data.txt");
+		Debug.Log ("appliction path: " + System.Environment.CurrentDirectory);
+		_m_AIMouseLook = new AIMouseLook (network);
+		
+		base.Start ();
+	}
 
 	protected override MouseLook m_MouseLook {
 		get {
@@ -18,7 +30,7 @@ public class AIController : FirstPersonController {
 		// Read input
 		//manually setting
 		//float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-		float horizontal = 20f;
+		float horizontal = 0f;
 		//float vertical = CrossPlatformInputManager.GetAxis("Vertical");
 		float vertical = 0f;
 
