@@ -27,6 +27,7 @@ public class BombExploder : MonoBehaviour {
 			explosionSystem.SetParticles (particles, numParticlesAlive);
 			exploding = false;
 			Destroy (gameObject);
+
 		}
 	}
 
