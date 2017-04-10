@@ -145,8 +145,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
 		private void ThrowBomb() 
 		{
 			Vector3 pos = m_Camera.transform.position;
-			pos.y += 1;
+			pos.y += 1 + GetComponent<Collider> ().bounds.size.y;
+
 			Transform bomb = Instantiate (BombPrefab, pos, m_Camera.transform.rotation);
+			//BombExploder script = bomb.GetComponent<BombExploder> ();
 			bomb.GetComponent<Rigidbody>().AddForce (transform.forward * 250);
 		}
 
