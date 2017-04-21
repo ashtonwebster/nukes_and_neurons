@@ -36,6 +36,7 @@ public class BombExploder : MonoBehaviour {
 		Vector3 explosionPos = transform.position;
 
 		Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
+		Debug.Log (colliders.Length);
 		foreach (Collider hit in colliders)
 		{
 			Rigidbody rb = hit.GetComponent<Rigidbody>();
