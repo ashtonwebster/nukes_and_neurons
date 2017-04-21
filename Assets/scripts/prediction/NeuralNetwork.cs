@@ -27,8 +27,8 @@ public class NeuralNetwork {
 	public void InitNetwork() {
 		// currently network has 1 input, 5 hidden nodes, and 1 output
 		this.network = new ActivationNetwork(new BipolarSigmoidFunction(ALPHA),
-			1, 5, 1);
-
+			2, 5, 2);
+		
 		this.teacher = new ParallelResilientBackpropagationLearning(this.network);
 	}
 
@@ -47,20 +47,20 @@ public class NeuralNetwork {
 			line = line.Trim ();
 			tp.InitializeFromSaved (line);
 			trainingList.Add(tp);
-			if (tp.observedAction.xRotInput != 0.0f) {
+			if (tp.observedAction.xRotInput != 0.0f || tp.observedAction.yRotInput != 0.0f) {
 				// only add non-zero examples for now
-				input.Add (new List<double> () { tp.gameStateSummary.XZAngleToObj });
-				output.Add (new List<double> () { tp.observedAction.yRotInput} );
+				input.Add (new List<double> () { tp.gameStateSummary.XZAngleToObj, tp.gameStateSummary.YZAngletoObj });
+				output.Add (new List<double> () { tp.observedAction.yRotInput, tp.observedAction.xRotInput } );
 			}
 		}
 		file.Close ();
 		Debug.Log (string.Format ("Training List Length: {0}", input.Count));
 
-		for (int i = 0; i < 300; i++) { 
+		for (int i = 0; i < 1000; i++) { 
 			double error = this.teacher.RunEpoch (NestedListToArray(input), NestedListToArray(output));
-//			if (i % 50 == 0) { 
-//				Debug.Log (string.Format("iteration: {0}, Error: {1}", i, error));
-//			}
+			if (i % 50 == 0) { 
+				Debug.Log (string.Format("iteration: {0}, Error: {1}", i, error));
+			}
 		}
 
 
@@ -75,10 +75,11 @@ public class NeuralNetwork {
 	}
 
 	public ObservedAction GetPredictedAction(GameStateSummary gss) { 
-		double[] input = { gss.XZAngleToObj } ;
+		double[] input = { gss.XZAngleToObj, gss.YZAngletoObj } ;
 		double[] output = this.network.Compute(input);
 		ObservedAction action = new ObservedAction ();
 		action.yRotInput = (float) output [0];
+		action.xRotInput = (float)output [1];
 		return action;
 	}
 

@@ -28,9 +28,9 @@ public class AIMouseLook : MouseLook {
 		GameStateSummary gss = new GameStateSummary();
 		gss.InitializeFromGame(GameObject.Find ("AIController"), GameObject.Find("AIFirstPersonCharacter"));
 		ObservedAction action = this.network.GetPredictedAction (gss);
-		//Debug.Log (action.xRotInput);
-		this.yInput = action.yRotInput;
-		this.xInput = 0.0f;
+		Debug.Log (action);
+		this.yInput = action.yRotInput; //* 5.0f;
+		this.xInput = action.xRotInput; //* 5.0f;
 	}
 
 }

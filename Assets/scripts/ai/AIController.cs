@@ -13,7 +13,8 @@ public class AIController : GenericFirstPersonController {
 		// train the model based on previous input
 		this.network = new NeuralNetwork();
 		//string trainingDir = System.Environment.GetEnvironmentVariable ("TRAINING_DIR");
-		network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/yrot_good_test_data.txt");
+		//network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/yrot_good_test_data.txt");
+		network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/xyrot_data.txt");
 		Debug.Log ("appliction path: " + System.Environment.CurrentDirectory);
 		_m_AIMouseLook = new AIMouseLook (network);
 		

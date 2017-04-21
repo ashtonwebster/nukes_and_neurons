@@ -21,7 +21,7 @@ public class RandomGoalMover : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		goalState = Instantiate (goalState);
-		goalState.transform.localPosition = new Vector3 (Random.value * 10, 4, Random.value * 10);
+		goalState.transform.localPosition = new Vector3 (Random.value * 10, Random.value * 10 + 4, Random.value * 10);
 	}
 	
 	// Update is called once per frame
