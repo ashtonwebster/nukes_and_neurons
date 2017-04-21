@@ -7,6 +7,8 @@ public class HumanController : GenericFirstPersonController {
 
 	private Recorder _recorder = new Recorder();
 
+	public bool isRecording;
+
 
 	// call the parent constructor
 	public HumanController() : base() { 
@@ -15,13 +17,17 @@ public class HumanController : GenericFirstPersonController {
 	// Use this for initialization
 	protected override void Start () {
 		base.Start ();
-		_recorder.InitializeFile ();
+		if (isRecording) {
+			_recorder.InitializeFile ();
+		}
 
 	}
 	
 	// Update is called once per frame
 	protected override void Update () {
 		base.Update ();
-		_recorder.WriteToFile (debug: true);
+		if (isRecording) {
+			_recorder.WriteToFile (debug: true);
+		}
 	}
 }
