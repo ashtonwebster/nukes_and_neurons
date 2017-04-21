@@ -41,6 +41,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected float m_NextStep;
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
+		public Transform BombPrefab;
 
 		protected virtual MouseLook m_MouseLook {
 			get {
@@ -85,7 +86,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir.y = 0f;
             }
-
+			if (Input.GetMouseButtonDown (0)) {
+				ThrowBomb ();
+			}
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
 
@@ -139,6 +142,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_MouseLook.UpdateCursorLock();
         }
 
+		private void ThrowBomb() 
+		{
+			Vector3 pos = m_Camera.transform.position;
+			pos.y += 1 + GetComponent<Collider> ().bounds.size.y;
+
+			Transform bomb = Instantiate (BombPrefab, pos, m_Camera.transform.rotation);
+			//BombExploder script = bomb.GetComponent<BombExploder> ();
+			bomb.GetComponent<Rigidbody>().AddForce (transform.forward * 250);
+		}
 
         private void PlayJumpSound()
         {
