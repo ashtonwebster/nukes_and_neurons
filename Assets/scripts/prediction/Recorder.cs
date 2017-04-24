@@ -10,8 +10,9 @@ public class Recorder {
 	//private float timeSinceLog = 0f;
 	private System.IO.StreamWriter file;
 			
-	public void InitializeFile()  {
-		this.file = new System.IO.StreamWriter (System.Environment.CurrentDirectory + "/training_data/test2.txt");
+	public void InitializeFile(string filename)  {
+		this.file = new System.IO.StreamWriter (System.Environment.CurrentDirectory + filename);
+
 		// combine the features header and the target movement header
 		file.WriteLine (GameStateSummary.GetHeader () + ObservedAction.GetHeader ());
 	}

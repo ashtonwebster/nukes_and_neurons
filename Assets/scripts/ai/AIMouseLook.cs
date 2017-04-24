@@ -17,6 +17,8 @@ public class AIMouseLook : MouseLook {
 	/// which direction to turn</param>
 	public AIMouseLook(NeuralNetwork network) {
 		this.network = network;
+		this.MaximumX = 30;
+		this.MinimumX = 30;
 	}
 
 	/// <summary>
@@ -31,6 +33,7 @@ public class AIMouseLook : MouseLook {
 		Debug.Log (action);
 		this.yInput = action.yRotInput; //* 5.0f;
 		this.xInput = action.xRotInput; //* 5.0f;
+		//this.xInput = 0f;
 	}
 
 }

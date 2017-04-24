@@ -14,8 +14,9 @@ public class AIController : GenericFirstPersonController {
 		this.network = new NeuralNetwork();
 		//string trainingDir = System.Environment.GetEnvironmentVariable ("TRAINING_DIR");
 		//network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/yrot_good_test_data.txt");
-		network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/xyrot_data.txt");
-		Debug.Log ("appliction path: " + System.Environment.CurrentDirectory);
+		//network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/xyrot_data.txt");
+		network.TrainAINetwork (inputPath: System.Environment.CurrentDirectory + "/training_data/training_everything.txt",
+			serializePath: System.Environment.CurrentDirectory + "/training_data/serialized_model.bin");
 		_m_AIMouseLook = new AIMouseLook (network);
 		
 		base.Start ();
@@ -31,9 +32,13 @@ public class AIController : GenericFirstPersonController {
 		// Read input
 		//manually setting
 		//float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-		float horizontal = 0f;
+		GameStateSummary gss = new GameStateSummary();
+		gss.InitializeFromGame(GameObject.Find ("AIController"), GameObject.Find("AIFirstPersonCharacter"));
+		ObservedAction action = this.network.GetPredictedAction (gss);
+		float horizontal = action.horizontalPan;
 		//float vertical = CrossPlatformInputManager.GetAxis("Vertical");
-		float vertical = 0f;
+		float vertical = action.forwardPan;
+		this.isFiring = (action.fireButtonDown > 0.13f);
 
 		bool waswalking = this.m_IsWalking;
 

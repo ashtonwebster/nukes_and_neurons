@@ -41,6 +41,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected float m_NextStep;
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
+		protected bool isFiring;
+		protected bool resetView;
 		public Transform BombPrefab;
 
 		protected virtual MouseLook m_MouseLook {
@@ -68,7 +70,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         // Update is called once per frame
         protected virtual void Update()
         {
-            RotateView();
+//			if (!resetView) {
+			RotateView ();
+//			} else {
+//				this.m_Camera.transform.rotation = Quaternion.identity;
+//				this.m_CharacterController.transform.rotation = Quaternion.identity;
+//				this.resetView = false;
+//			}
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
@@ -86,7 +94,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir.y = 0f;
             }
-			if (Input.GetMouseButtonDown (0)) {
+			if (this.isFiring) {
 				ThrowBomb ();
 			}
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
