@@ -43,7 +43,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected AudioSource m_AudioSource;
 		protected bool isFiring;
 		protected bool resetView;
+
 		public Transform BombPrefab;
+		public double firingCooldown;
+
+		protected double nextAllowedFiringTime = 0;
 
 		protected virtual MouseLook m_MouseLook {
 			get {
@@ -66,6 +70,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
         }
 
+
+		double GetEpochTime() {
+			TimeSpan t = DateTime.UtcNow - new DateTime(2017, 4, 24);
+			return (float) t.TotalSeconds;
+		}
 
         // Update is called once per frame
         protected virtual void Update()
@@ -94,8 +103,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir.y = 0f;
             }
-			if (this.isFiring) {
+			if (this.isFiring && this.nextAllowedFiringTime <= this.GetEpochTime()) {
 				ThrowBomb ();
+				this.nextAllowedFiringTime = this.GetEpochTime() + this.firingCooldown;
 			}
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
