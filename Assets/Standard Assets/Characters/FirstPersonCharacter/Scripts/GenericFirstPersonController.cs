@@ -1,11 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
+
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
     public class GenericFirstPersonController : MonoBehaviour
@@ -28,7 +32,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] protected AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] protected AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
-        protected Camera m_Camera;
+        public Camera m_Camera;
         protected bool m_Jump;
         protected float m_YRotation;
         protected Vector2 m_Input;
@@ -41,8 +45,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected float m_NextStep;
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
-		public Transform BombPrefab;
-
+		public GameObject me;
+		public bool usingJoystick = true;
 		protected virtual MouseLook m_MouseLook {
 			get {
 				return _m_MouseLook;
@@ -53,7 +57,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected virtual void Start()
         {
             m_CharacterController = GetComponent<CharacterController>();
-            m_Camera = Camera.main;
+			m_Camera = me.GetComponent<Camera>();
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
@@ -69,10 +73,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected virtual void Update()
         {
             RotateView();
+
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
-            {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+            { 
+				if (!usingJoystick) {
+					m_Jump = CrossPlatformInputManager.GetButtonDown ("JumpKey");
+				} else {
+					m_Jump = CrossPlatformInputManager.GetButtonDown ("Joy Jump");
+				}
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -86,9 +95,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_MoveDir.y = 0f;
             }
-			if (Input.GetMouseButtonDown (0)) {
-				ThrowBomb ();
-			}
+
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
 
@@ -142,17 +149,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_MouseLook.UpdateCursorLock();
         }
 
-		private void ThrowBomb() 
-		{
-			Vector3 pos = m_Camera.transform.position;
-			pos.y += 1 + GetComponent<Collider> ().bounds.size.y;
-
-			Transform bomb = Instantiate (BombPrefab, pos, m_Camera.transform.rotation);
-			//BombExploder script = bomb.GetComponent<BombExploder> ();
-			bomb.GetComponent<Rigidbody>().AddForce (transform.forward * 250);
-		}
-
-        private void PlayJumpSound()
+		private void PlayJumpSound()
         {
             m_AudioSource.clip = m_JumpSound;
             m_AudioSource.Play();
@@ -222,15 +219,26 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected virtual void GetInput(out float speed)
         {
             // Read input
-            float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-            float vertical = CrossPlatformInputManager.GetAxis("Vertical");
-
+			float horizontal;
+			float vertical;
+			if (!usingJoystick) {
+				horizontal = CrossPlatformInputManager.GetAxis ("Key Horizontal");
+				vertical = CrossPlatformInputManager.GetAxis ("Key Vertical");
+			} else {
+				horizontal = CrossPlatformInputManager.GetAxis ("Joy X");
+				vertical = CrossPlatformInputManager.GetAxis ("Joy Y");
+			}
             bool waswalking = m_IsWalking;
 
 #if !MOBILE_INPUT
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
-            m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+			if (!usingJoystick) {
+				m_IsWalking = (!Input.GetKey (KeyCode.LeftShift));
+			} else {
+				m_IsWalking = (!Input.GetButton ("Joy Shift"));
+			}
+            //m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
 #endif
             // set the desired speed to be walking or running
             speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
@@ -249,12 +257,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 StopAllCoroutines();
                 StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
             }
+			horizontal = 0;
+			vertical = 0;
         }
 
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+			m_MouseLook.LookRotation (transform, m_Camera.transform, usingJoystick);
         }
 
 

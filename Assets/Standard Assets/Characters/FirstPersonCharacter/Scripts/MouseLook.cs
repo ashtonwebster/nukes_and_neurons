@@ -9,7 +9,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
     {
         public float XSensitivity = 2f;
         public float YSensitivity = 2f;
-        public bool clampVerticalRotation = true;
+		public float joyXSensitivity = 50f;
+		public float joyYSensitivity = 50f;
+        public bool clampVerticalRotation = false;
         public float MinimumX = -90F;
         public float MaximumX = 90F;
         public bool smooth;
@@ -24,6 +26,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 		protected float yInput;
 		protected float xInput;
 
+		protected float yInput1;
+		protected float xInput1;
         public void Init(Transform character, Transform camera)
         {
             m_CharacterTargetRot = character.localRotation;
@@ -36,13 +40,23 @@ namespace UnityStandardAssets.Characters.FirstPerson
 		/// but you are rotating AROUND these AXES, not the direction of the movement.
 		/// </summary>
 		protected virtual void GetRotationInput() {
-			this.yInput = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-            this.xInput = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+			GetRotationInput (false);
 		}
-
-        public void LookRotation(Transform character, Transform camera)
+		protected virtual void GetRotationInput(bool usingJoystick) {
+			if (!usingJoystick) {
+				this.yInput = CrossPlatformInputManager.GetAxis ("Mouse X") * XSensitivity;
+				this.xInput = CrossPlatformInputManager.GetAxis ("Mouse Y") * YSensitivity;
+			} else {
+				this.yInput = CrossPlatformInputManager.GetAxis ("JoyAltX") * joyXSensitivity;
+				this.xInput = CrossPlatformInputManager.GetAxis ("JoyAltY") * joyYSensitivity;
+			}
+		}
+		public void LookRotation(Transform character, Transform camera) {
+			LookRotation (character, camera, false);
+		}
+		public void LookRotation(Transform character, Transform camera, bool usingJoystick)
         {
-			this.GetRotationInput ();
+			this.GetRotationInput (usingJoystick);
 			float xRot = this.xInput * XSensitivity;
 			float yRot = this.yInput * YSensitivity;
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
@@ -65,6 +79,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             UpdateCursorLock();
+			this.yInput = 0;
+			this.xInput = 0;
         }
 
         public void SetCursorLock(bool value)
