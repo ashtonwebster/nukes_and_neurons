@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
-
+using UnityStandardAssets.CrossPlatformInput;
 public class HumanController : GenericFirstPersonController {
 
-	private Recorder _recorder = new Recorder();
+
 
 	public bool isRecording;
 	public string recordingFilename;
-
+	public GameObject goal;
+	private Recorder _recorder;
 
 	// call the parent constructor
-	public HumanController() : base() { 
+	public HumanController(GameObject goalParam) : base() { 
+		this.goal = goalParam;
+		this._recorder = new Recorder(this.goal);
+
 	}
 
 	// Use this for initialization
@@ -27,12 +31,8 @@ public class HumanController : GenericFirstPersonController {
 	// Update is called once per frame
 	protected override void Update () {
 		base.Update ();
-		if (Input.GetMouseButtonDown (0)) {
-			this.isFiring = true;
-			//this.resetView = true;
-		} else {
-			this.isFiring = false;
-		}
+		this.isJumping = CrossPlatformInputManager.GetButtonDown("Jump");
+		this.isFiring = Input.GetMouseButtonDown (0);
 
 		if (isRecording) {
 			_recorder.WriteToFile (debug: true);

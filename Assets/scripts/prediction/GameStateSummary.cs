@@ -15,9 +15,9 @@ public class GameStateSummary {
 	public float YZAngletoObj;
 	public float distToObj;
 
-	public GameStateSummary() { 
+	public GameStateSummary(GameObject goalParam) { 
 
-		goal = GameObject.FindGameObjectWithTag ("goal_state");
+		this.goal = goalParam;
 	}
 
 	public static string GetHeader() {

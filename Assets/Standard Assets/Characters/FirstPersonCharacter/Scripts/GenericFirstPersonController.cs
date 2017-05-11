@@ -42,6 +42,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
 		protected bool isFiring;
+		protected bool isJumping;
 		protected bool resetView;
 
 		public Transform BombPrefab;
@@ -59,7 +60,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected virtual void Start()
         {
             m_CharacterController = GetComponent<CharacterController>();
-            m_Camera = Camera.main;
+            //m_Camera = Camera.main;
+			m_Camera = this.transform.GetChild(0).GetComponent<Camera> ();
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
@@ -89,7 +91,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                //m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+				m_Jump = this.isJumping;
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)

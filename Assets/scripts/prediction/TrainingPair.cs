@@ -5,9 +5,11 @@ using UnityEngine;
 public class TrainingPair  {
 	public ObservedAction observedAction;
 	public GameStateSummary gameStateSummary;
+	private GameObject goal;
 
-	public TrainingPair() 
+	public TrainingPair(GameObject goalParam) 
 	{ 
+		this.goal = goalParam;
 
 	}
 
@@ -15,14 +17,14 @@ public class TrainingPair  {
 		this.observedAction = new ObservedAction ();
 		this.observedAction.InitializeFromGame ();
 
-		this.gameStateSummary = new GameStateSummary ();
+		this.gameStateSummary = new GameStateSummary (this.goal);
 		this.gameStateSummary.InitializeFromGame (selfObj, childObj);
 	}
 
 	public void InitializeFromSaved(string s) {
 		string[] splits = s.Split ('|');
 
-		this.gameStateSummary = new GameStateSummary ();
+		this.gameStateSummary = new GameStateSummary (this.goal);
 		this.gameStateSummary.InitializeFromSaved (splits [0]);
 
 		this.observedAction = new ObservedAction ();

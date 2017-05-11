@@ -13,13 +13,15 @@ public class NeuralNetwork {
 	public int NumNodesFirstLayer;
 	private ActivationNetwork network;
 	private ISupervisedLearning teacher;
+	private GameObject goal;
 
 	private const float ALPHA = 0.5f;
 
-	public NeuralNetwork(int numNodesFirstLayer = 2, 
+	public NeuralNetwork(GameObject goalParam, int numNodesFirstLayer = 2, 
 		double sigmoidAlpha = 0.5) {
 		this.SigmoidAlpha = sigmoidAlpha;
 		this.NumNodesFirstLayer = numNodesFirstLayer;
+		this.goal = goalParam;
 
 		this.InitNetwork ();
 	}
@@ -50,7 +52,7 @@ public class NeuralNetwork {
 		file.ReadLine ();
 		while((line = file.ReadLine()) != null)
 		{
-			TrainingPair tp = new TrainingPair ();
+			TrainingPair tp = new TrainingPair (this.goal);
 			line = line.Trim ();
 			tp.InitializeFromSaved (line);
 			trainingList.Add(tp);
