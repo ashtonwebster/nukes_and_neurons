@@ -9,8 +9,8 @@ public class ObservedAction {
 	// note that xRotInput and yRotInput become scaled by sensitivity during the actual rotation
 	public float xRotInput;
 	public float yRotInput;
-	public bool sprintButtonDown;
-	public bool fireButtonDown;
+	public float sprintButtonDown;
+	public float fireButtonDown;
 
 	public ObservedAction() {
 
@@ -21,9 +21,9 @@ public class ObservedAction {
 		this.forwardPan = CrossPlatformInputManager.GetAxis ("Vertical");
 		this.yRotInput = CrossPlatformInputManager.GetAxis("Mouse X");
 		this.xRotInput = CrossPlatformInputManager.GetAxis("Mouse Y");
-		this.sprintButtonDown = Input.GetKey(KeyCode.LeftShift);
+		this.sprintButtonDown = Input.GetKey(KeyCode.LeftShift) ? 1.0f : 0.0f;
 		// only true if pressed during the current frame
-		this.fireButtonDown = Input.GetMouseButtonDown(0);
+		this.fireButtonDown = Input.GetMouseButtonDown(0) ? 1.0f : 0.0f;
 	}
 
 	public void InitializeFromSaved(string savedRow) { 
@@ -32,8 +32,8 @@ public class ObservedAction {
 		this.forwardPan = float.Parse (splits [1]);
 		this.xRotInput = float.Parse (splits [2]);
 		this.yRotInput = float.Parse (splits [3]);
-		this.sprintButtonDown = splits [4].Equals ("1");
-		this.fireButtonDown = splits [5].Equals("1");
+		this.sprintButtonDown = float.Parse (splits [4]);
+		this.fireButtonDown = float.Parse (splits [5]);
 
 	}
 
@@ -44,7 +44,7 @@ public class ObservedAction {
 	public override string ToString ()
 	{
 		return string.Format ("{0},{1},{2},{3},{4},{5}", horizontalPan, forwardPan,
-			xRotInput, yRotInput, sprintButtonDown ? 1 : 0, fireButtonDown ? 1: 0);
+			xRotInput, yRotInput, sprintButtonDown, fireButtonDown);
 	}
 
 }

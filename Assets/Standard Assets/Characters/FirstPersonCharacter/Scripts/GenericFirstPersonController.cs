@@ -45,8 +45,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected float m_NextStep;
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
-		public GameObject me;
 		public bool usingJoystick = true;
+		protected bool isFiring;
+		protected bool isJumping;
+		protected bool resetView;
+
+		public Transform BombPrefab;
+		public double firingCooldown;
+
+		protected double nextAllowedFiringTime = 0;
+
 		protected virtual MouseLook m_MouseLook {
 			get {
 				return _m_MouseLook;
@@ -57,7 +65,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected virtual void Start()
         {
             m_CharacterController = GetComponent<CharacterController>();
-			m_Camera = me.GetComponent<Camera>();
+            //m_Camera = Camera.main;
+			m_Camera = this.transform.GetChild(0).GetComponent<Camera> ();
             m_OriginalCameraPosition = m_Camera.transform.localPosition;
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
@@ -68,6 +77,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
         }
 
+
+		double GetEpochTime() {
+			TimeSpan t = DateTime.UtcNow - new DateTime(2017, 4, 24);
+			return (float) t.TotalSeconds;
+		}
 
         // Update is called once per frame
         protected virtual void Update()
@@ -96,6 +110,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_MoveDir.y = 0f;
             }
 
+//			if (this.isFiring && this.nextAllowedFiringTime <= this.GetEpochTime()) {
+//				ThrowBomb ();
+//				this.nextAllowedFiringTime = this.GetEpochTime() + this.firingCooldown;
+//			}
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
 

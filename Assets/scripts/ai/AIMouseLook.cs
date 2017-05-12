@@ -9,14 +9,18 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class AIMouseLook : MouseLook {
 
 	private NeuralNetwork network;
+	private GameObject goal;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AIMouseLook"/> class.
 	/// </summary>
 	/// <param name="network">the INITIALIZED neural network to use to predict
 	/// which direction to turn</param>
-	public AIMouseLook(NeuralNetwork network) {
+	public AIMouseLook(NeuralNetwork network, GameObject goalParam) {
 		this.network = network;
+		//this.MaximumX = 30;
+		//this.MinimumX = 30;
+		this.goal = goalParam;
 	}
 
 	/// <summary>
@@ -25,12 +29,13 @@ public class AIMouseLook : MouseLook {
 	/// </summary>
 	protected override void GetRotationInput ()
 	{
-		GameStateSummary gss = new GameStateSummary();
+		GameStateSummary gss = new GameStateSummary(this.goal);
 		gss.InitializeFromGame(GameObject.Find ("AIController"), GameObject.Find("AIFirstPersonCharacter"));
 		ObservedAction action = this.network.GetPredictedAction (gss);
 		Debug.Log (action);
 		this.yInput = action.yRotInput; //* 5.0f;
-		this.xInput = action.xRotInput; //* 5.0f;
+		//this.xInput = action.xRotInput; //* 5.0f;
+		this.xInput = 0f;
 	}
 
 }

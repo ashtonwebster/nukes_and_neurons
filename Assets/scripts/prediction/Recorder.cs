@@ -9,9 +9,15 @@ public class Recorder {
 	public float logPeriod = 0f;
 	//private float timeSinceLog = 0f;
 	private System.IO.StreamWriter file;
+	private GameObject goal;
 			
-	public void InitializeFile()  {
-		this.file = new System.IO.StreamWriter (System.Environment.CurrentDirectory + "/training_data/test2.txt");
+	public Recorder(GameObject goalParam){
+		this.goal = goalParam;
+	}
+
+	public void InitializeFile(string filename)  {
+		this.file = new System.IO.StreamWriter (System.Environment.CurrentDirectory + filename);
+
 		// combine the features header and the target movement header
 		file.WriteLine (GameStateSummary.GetHeader () + ObservedAction.GetHeader ());
 	}
@@ -21,7 +27,7 @@ public class Recorder {
 	/// </summary>
 	/// <param name="debug">If set to <c>true</c>, write all recorded </param>
 	public void WriteToFile(bool debug=false) { 
-		TrainingPair trainingPair = new TrainingPair ();
+		TrainingPair trainingPair = new TrainingPair (this.goal);
 		trainingPair.InitializeFromGame (GameObject.Find("FPSController"), GameObject.Find("FirstPersonCharacter"));
 
 		// write to file with features and target movements

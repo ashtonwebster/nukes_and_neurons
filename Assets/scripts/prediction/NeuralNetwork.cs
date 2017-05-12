@@ -5,7 +5,7 @@ using Accord.Neuro;
 using Accord.Neuro.Learning;
 using System.IO;
 using System.Linq;
-
+using System.Runtime.Serialization.Formatters.Binary;
 public class NeuralNetwork {
 
 
@@ -13,26 +13,35 @@ public class NeuralNetwork {
 	public int NumNodesFirstLayer;
 	private ActivationNetwork network;
 	private ISupervisedLearning teacher;
+	private GameObject goal;
 
 	private const float ALPHA = 0.5f;
 
-	public NeuralNetwork(int numNodesFirstLayer = 2, 
+	public NeuralNetwork(GameObject goalParam, int numNodesFirstLayer = 2, 
 		double sigmoidAlpha = 0.5) {
 		this.SigmoidAlpha = sigmoidAlpha;
 		this.NumNodesFirstLayer = numNodesFirstLayer;
+		this.goal = goalParam;
 
 		this.InitNetwork ();
 	}
 
 	public void InitNetwork() {
-		// currently network has 1 input, 5 hidden nodes, and 1 output
+		// currently network has 3 input, 5 hidden nodes, and 1 output
 		this.network = new ActivationNetwork(new BipolarSigmoidFunction(ALPHA),
-			2, 5, 2);
+			3, 50, 5);
 		
 		this.teacher = new ParallelResilientBackpropagationLearning(this.network);
 	}
 
-	public void TrainAINetwork(string inputPath) {
+	public void TrainAINetwork(string inputPath, string serializePath=null) {
+		if (serializePath != null && File.Exists(serializePath)) {
+			using (FileStream fs = new FileStream (serializePath, FileMode.Open)) {
+				this.network = (ActivationNetwork) new BinaryFormatter().Deserialize(fs);
+				return;
+			}
+		}
+
 		List<TrainingPair> trainingList = new List<TrainingPair>();
 		System.IO.StreamReader file = 
 			new System.IO.StreamReader (inputPath);
@@ -43,14 +52,21 @@ public class NeuralNetwork {
 		file.ReadLine ();
 		while((line = file.ReadLine()) != null)
 		{
-			TrainingPair tp = new TrainingPair ();
+			TrainingPair tp = new TrainingPair (this.goal);
 			line = line.Trim ();
 			tp.InitializeFromSaved (line);
 			trainingList.Add(tp);
-			if (tp.observedAction.xRotInput != 0.0f || tp.observedAction.yRotInput != 0.0f) {
+			if (tp.observedAction.xRotInput != 0.0f || tp.observedAction.yRotInput != 0.0f || tp.observedAction.forwardPan != 0.0f) {
 				// only add non-zero examples for now
-				input.Add (new List<double> () { tp.gameStateSummary.XZAngleToObj, tp.gameStateSummary.YZAngletoObj });
-				output.Add (new List<double> () { tp.observedAction.yRotInput, tp.observedAction.xRotInput } );
+				input.Add (new List<double> () { tp.gameStateSummary.XZAngleToObj, 
+					tp.gameStateSummary.YZAngletoObj, 
+					tp.gameStateSummary.distToObj});
+				output.Add (new List<double> () { tp.observedAction.yRotInput, 
+					tp.observedAction.xRotInput,
+					tp.observedAction.horizontalPan,
+					tp.observedAction.forwardPan, 
+					tp.observedAction.fireButtonDown
+				} );
 			}
 		}
 		file.Close ();
@@ -62,6 +78,14 @@ public class NeuralNetwork {
 				Debug.Log (string.Format("iteration: {0}, Error: {1}", i, error));
 			}
 		}
+
+		if (serializePath != null) {
+			using (FileStream fs = new FileStream(serializePath, FileMode.Create))
+			{
+				new BinaryFormatter().Serialize(fs, this.network);
+			}    
+		}
+
 
 
 //		TrainingPair tp1 = new TrainingPair();
@@ -75,11 +99,14 @@ public class NeuralNetwork {
 	}
 
 	public ObservedAction GetPredictedAction(GameStateSummary gss) { 
-		double[] input = { gss.XZAngleToObj, gss.YZAngletoObj } ;
+		double[] input = { gss.XZAngleToObj, gss.YZAngletoObj, gss.distToObj } ;
 		double[] output = this.network.Compute(input);
 		ObservedAction action = new ObservedAction ();
 		action.yRotInput = (float) output [0];
 		action.xRotInput = (float)output [1];
+		action.horizontalPan = (float)output [2];
+		action.forwardPan = (float)output [3];
+		action.fireButtonDown = (float)output [4];
 		return action;
 	}
 
