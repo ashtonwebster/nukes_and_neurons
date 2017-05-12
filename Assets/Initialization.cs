@@ -56,11 +56,24 @@ public class Initialization : MonoBehaviour {
 
 	void Attack(Vector3 location) {
 		do_hit (Vector3.down, location);
+		do_hit ((Vector3.up + Vector3.forward) / 2, location);
+		do_hit ((Vector3.up + Vector3.back) / 2, location);
+		do_hit ((Vector3.down + Vector3.forward) / 2, location);
+		do_hit ((Vector3.down + Vector3.back) / 2, location);
+		do_hit ((Vector3.up + Vector3.left) / 2, location);
+		do_hit ((Vector3.up + Vector3.right) / 2, location);
+		do_hit ((Vector3.down + Vector3.left) / 2, location);
+		do_hit ((Vector3.down + Vector3.right) / 2, location);
 		do_hit (Vector3.up, location);
 		do_hit (Vector3.forward, location);
 		do_hit (Vector3.back, location);
 		do_hit (Vector3.left, location);
+		do_hit ((Vector3.left + Vector3.forward) / 2, location);
+		do_hit ((Vector3.right + Vector3.forward) / 2, location);
 		do_hit (Vector3.right, location);
+		do_hit ((Vector3.left + Vector3.back) / 2, location);
+		do_hit ((Vector3.right + Vector3.back) / 2, location);
+
 	}
 
 	void do_hit(Vector3 dir, Vector3 location) {
