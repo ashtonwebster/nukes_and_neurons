@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public class AIController : GenericFirstPersonController {
+public class AIController : Player {
 
 	//this may ignore the public settings...
 	protected AIMouseLook _m_AIMouseLook;
@@ -35,7 +35,7 @@ public class AIController : GenericFirstPersonController {
 		//manually setting
 		//float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
 		GameStateSummary gss = new GameStateSummary(this.goalState);
-		gss.InitializeFromGame(GameObject.Find ("AIController"), GameObject.Find("AIFirstPersonCharacter"));
+		gss.InitializeFromGame(this.gameObject, GameObject.Find("AIFirstPersonCharacter"));
 		ObservedAction action = this.network.GetPredictedAction (gss);
 		float horizontal = action.horizontalPan;
 		//float vertical = CrossPlatformInputManager.GetAxis("Vertical");

@@ -10,11 +10,11 @@ public class Grenade : Bomb {
 		
 	}
 
-	public void Start() {
+	public override void Start() {
 		Invoke("Explode", seconds);
 	}
 
-	void OnCollisionEnter(Collision other) {} //Do nothing for grenade
+	public override void OnCollisionEnter(Collision other) {} //Do nothing for grenade
 
 
 }

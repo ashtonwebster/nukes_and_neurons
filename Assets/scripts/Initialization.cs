@@ -23,11 +23,12 @@ public class Initialization : MonoBehaviour {
 		temp.y += 2;
 		return temp;
 	}
+
 	void spawn() {
 		GameObject player1 = Instantiate(player1Prefab, getSpawnPos(), Quaternion.identity);
 		if (numPlayers == 2) {
 			player1.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, 0.5f, 1);
-			GameObject player2 = Instantiate (player1Prefab, getSpawnPos (), Quaternion.identity);
+			GameObject player2 = Instantiate (player2Prefab, getSpawnPos (), Quaternion.identity);
 			player2.GetComponentInChildren<Camera> ().rect = new Rect (0.5f, 0, 1, 1);
 			player2.GetComponent<GenericFirstPersonController> ().usingJoystick = false;
 			player2.GetComponent<Player> ().playerNum = 2;
@@ -41,7 +42,7 @@ public class Initialization : MonoBehaviour {
 			GameObject player1 = Instantiate (player1Prefab, getSpawnPos(), Quaternion.identity);
 			player1.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, 0.5f, 1);
 		} else {
-			GameObject player2 = Instantiate (player1Prefab, getSpawnPos (), Quaternion.identity);
+			GameObject player2 = Instantiate (player2Prefab, getSpawnPos (), Quaternion.identity);
 			player2.GetComponentInChildren<Camera> ().rect = new Rect (0.5f, 0, 1, 1);
 			player2.GetComponent<GenericFirstPersonController> ().usingJoystick = false;
 			player2.GetComponent<Player> ().playerNum = 2;

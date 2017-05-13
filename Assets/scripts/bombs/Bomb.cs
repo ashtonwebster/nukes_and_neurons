@@ -18,20 +18,20 @@ public class Bomb : MonoBehaviour {
 
 	private readonly Color32[] colors = { new Color32(255, 0, 0, 255), new Color32(255, 69, 0, 255), new Color32(255, 140, 0, 255), new Color32(255, 255, 0, 255) }; 
 
-	protected void Start()
+	public virtual void Start()
 	{
 		coloredCubes = GameObject.Find ("World");
 		coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume>();
 		exploding = false;
 	}
-	void Awake()
+	public virtual void Awake()
 	{
 		coloredCubes = GameObject.Find ("World");
 		coloredCubesVolume = coloredCubes.gameObject.GetComponent<ColoredCubesVolume>();
 		exploding = false;
 	}
 
-	void LateUpdate() {
+	public virtual void LateUpdate() {
 		if (exploding) {
 			ParticleSystem.Particle[] particles = new ParticleSystem.Particle[explosionSystem.main.maxParticles];
 			int numParticlesAlive = explosionSystem.GetParticles (particles);
@@ -45,7 +45,7 @@ public class Bomb : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter(Collision other) {
+	public virtual void OnCollisionEnter(Collision other) {
 		Debug.Log (other.gameObject.name);
 		Explode();
 	}
@@ -72,12 +72,13 @@ public class Bomb : MonoBehaviour {
 		exploding = true;
 		explosionSystem = Instantiate (prefabExplosion, transform.position, transform.rotation);
 	}
+
 	void OnDrawGizmosSelected()
 	{
 		Gizmos.DrawWireSphere(transform.position, radius);
 	}
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update () {
 		if (transform.position.y < -100) {
 			Explode ();
 		}

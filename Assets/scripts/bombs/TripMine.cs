@@ -11,11 +11,11 @@ public class TripMine : Bomb {
 	{
 
 	}
-	public void Start() {
+	public override void Start() {
 		base.Start ();
 		Debug.Log("Trip mine start");
 	}
-	public void Awake() {
+	public override void Awake() {
 		
 		Debug.Log ("Trip mine awake");
 		Invoke("BombArmed", seconds);
@@ -27,7 +27,7 @@ public class TripMine : Bomb {
 		Debug.Log ("Trip Mine now armed");
 	}
 
-	public void Update() {
+	public override void Update() {
 		if (armed) {
 			Collider[] colliders = Physics.OverlapSphere (transform.position, armedRadius);
 			foreach (Collider c in colliders) {
@@ -38,7 +38,8 @@ public class TripMine : Bomb {
 			}
 		}
 	}
-	void OnCollisionEnter(Collision other) {} //Do nothing for grenade
+
+	public override void OnCollisionEnter(Collision other) {} //Do nothing for grenade
 
 }
 

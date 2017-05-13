@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.CrossPlatformInput;
-public class HumanController : GenericFirstPersonController {
-
-
+public class HumanController : Player {
 
 	public bool isRecording;
 	public string recordingFilename;
@@ -16,6 +14,7 @@ public class HumanController : GenericFirstPersonController {
 	public HumanController(GameObject goalParam) : base() { 
 		this.goal = goalParam;
 		this._recorder = new Recorder(this.goal);
+
 
 	}
 
@@ -30,12 +29,37 @@ public class HumanController : GenericFirstPersonController {
 	
 	// Update is called once per frame
 	protected override void Update () {
-		base.Update ();
-		this.isJumping = CrossPlatformInputManager.GetButtonDown("JumpKey");
-		this.isFiring = Input.GetMouseButtonDown (0);
+
+
+		if (usingJoystick) {
+			this.isFiring = Input.GetButton ("Joy Shoot");
+			this.m_IsWalking = (!Input.GetButton ("Joy Shift"));
+			if (Input.GetButtonDown ("Joy Toggle Forward")) {
+				currentWeapon = (currentWeapon + 1) % 3;
+			}
+			this.isJumping = Input.GetButton ("Joy Jump");
+		} else {
+			this.isFiring = Input.GetMouseButtonDown (0);
+			this.m_IsWalking = (!Input.GetKey (KeyCode.LeftShift));
+			if (Input.GetKey (KeyCode.Alpha1)) {
+				currentWeapon = (int)bomb_types.BOMB;
+				Debug.Log ("Switching to BOMB!");
+			}
+			if (Input.GetKey (KeyCode.Alpha2)) {
+				currentWeapon = (int)bomb_types.GRENADE;
+				Debug.Log ("Switching to GRENADE!");
+			}
+			if (Input.GetKey (KeyCode.Alpha3)) {
+				currentWeapon = (int)bomb_types.TRIPMINE;
+				Debug.Log ("Switching to TRIPMINE!");
+			}
+			this.isJumping = CrossPlatformInputManager.GetButtonDown("JumpKey");
+		}
 
 		if (isRecording) {
 			_recorder.WriteToFile (debug: true);
 		}
+		// do this last because we need to update the instance variables with the input
+		base.Update ();
 	}
 }

@@ -30,7 +30,7 @@ public class AIMouseLook : MouseLook {
 	protected override void GetRotationInput (bool usingJoystick)
 	{
 		GameStateSummary gss = new GameStateSummary(this.goal);
-		gss.InitializeFromGame(GameObject.Find ("AIController"), GameObject.Find("AIFirstPersonCharacter"));
+		gss.InitializeFromGame(GameObject.Find("AIController(Clone)"), GameObject.Find("AIFirstPersonCharacter"));
 		ObservedAction action = this.network.GetPredictedAction (gss);
 		Debug.Log (action);
 		this.yInput = action.yRotInput; //* 5.0f;

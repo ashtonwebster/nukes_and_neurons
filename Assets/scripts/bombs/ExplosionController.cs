@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class ExplosionController : MonoBehaviour {
 
-	private bool canFade;
 	private Color alphaColor;
 	private float timeToFade = 1.0f;
 
 	void Start() {
-		canFade = false;
 		alphaColor = GetComponent<MeshRenderer>().material.color;
 		alphaColor.a = 0;
 	}
