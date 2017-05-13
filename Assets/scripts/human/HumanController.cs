@@ -31,7 +31,7 @@ public class HumanController : GenericFirstPersonController {
 	// Update is called once per frame
 	protected override void Update () {
 		base.Update ();
-		this.isJumping = CrossPlatformInputManager.GetButtonDown("Jump");
+		this.isJumping = CrossPlatformInputManager.GetButtonDown("JumpKey");
 		this.isFiring = Input.GetMouseButtonDown (0);
 
 		if (isRecording) {

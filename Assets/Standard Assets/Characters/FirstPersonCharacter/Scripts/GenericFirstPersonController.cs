@@ -91,11 +91,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             { 
-				if (!usingJoystick) {
-					m_Jump = CrossPlatformInputManager.GetButtonDown ("JumpKey");
-				} else {
-					m_Jump = CrossPlatformInputManager.GetButtonDown ("Joy Jump");
-				}
+				m_Jump = this.isJumping;
+//				if (!usingJoystick) {
+//					m_Jump = CrossPlatformInputManager.GetButtonDown ("JumpKey");
+//				} else {
+//					m_Jump = CrossPlatformInputManager.GetButtonDown ("Joy Jump");
+//				}
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)

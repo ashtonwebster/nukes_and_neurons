@@ -28,6 +28,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
 		protected float yInput1;
 		protected float xInput1;
+
         public void Init(Transform character, Transform camera)
         {
             m_CharacterTargetRot = character.localRotation;
@@ -35,13 +36,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 		/// <summary>
+		/// overloaded; defaults to not using joystick
+		/// </summary>
+		protected virtual void GetRotationInput() {
+			GetRotationInput (usingJoystick: false);
+		}
+
+		/// <summary>
 		/// sets the rotation x and y values.  This allows the AIMouseLook to overwrite
 		/// the values.  This might be the opposite of what you expect for x and y,
 		/// but you are rotating AROUND these AXES, not the direction of the movement.
 		/// </summary>
-		protected virtual void GetRotationInput() {
-			GetRotationInput (false);
-		}
 		protected virtual void GetRotationInput(bool usingJoystick) {
 			if (!usingJoystick) {
 				this.yInput = CrossPlatformInputManager.GetAxis ("Mouse X") * XSensitivity;
@@ -51,9 +56,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 				this.xInput = CrossPlatformInputManager.GetAxis ("JoyAltY") * joyYSensitivity;
 			}
 		}
+
 		public void LookRotation(Transform character, Transform camera) {
 			LookRotation (character, camera, false);
 		}
+
 		public void LookRotation(Transform character, Transform camera, bool usingJoystick)
         {
 			this.GetRotationInput (usingJoystick);

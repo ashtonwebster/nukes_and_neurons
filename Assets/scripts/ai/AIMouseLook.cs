@@ -27,7 +27,7 @@ public class AIMouseLook : MouseLook {
 	/// Overwrites the parent rotation input; basically this is called every frame to 
 	/// get the inputs to the first person controller 
 	/// </summary>
-	protected override void GetRotationInput ()
+	protected override void GetRotationInput (bool usingJoystick)
 	{
 		GameStateSummary gss = new GameStateSummary(this.goal);
 		gss.InitializeFromGame(GameObject.Find ("AIController"), GameObject.Find("AIFirstPersonCharacter"));
