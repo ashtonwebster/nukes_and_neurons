@@ -186,7 +186,7 @@ public class Player : MonoBehaviour {
 			if (Input.GetButtonDown ("Joy Toggle Forward")) {
 				currentWeapon = (currentWeapon + 1) % 3;
 			}
-			Debug.Log (currentWeapon);
+//			Debug.Log (currentWeapon);
 
 		}
 	}
