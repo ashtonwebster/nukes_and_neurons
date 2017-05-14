@@ -60,7 +60,7 @@ public class Bomb : MonoBehaviour {
 	public void Explode(float gdamage) {
 		Vector3 explosionPos = transform.position;
 		Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-		Debug.Log (colliders.Length);
+		//Debug.Log (colliders.Length);
 		foreach (Collider hit in colliders) {
 			Rigidbody rb = hit.GetComponent<Rigidbody>();
 			if (rb != null) {
