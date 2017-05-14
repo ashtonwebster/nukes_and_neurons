@@ -7,22 +7,26 @@ public class HumanController : Player {
 
 	public bool isRecording;
 	public string recordingFilename;
+	public Recorder recorder;
 	public GameObject goal;
-	private Recorder _recorder;
+
 
 	// call the parent constructor
-	public HumanController(GameObject goalParam) : base() { 
+	// this constructor isn't called if using instantiate
+	public HumanController(GameObject goalParam, GameObject selfParam) : base() { 
+		this.Initialize(goalParam, selfParam);
+	}
+
+	public void Initialize(GameObject goalParam, GameObject selfParam) {
 		this.goal = goalParam;
-		this._recorder = new Recorder(this.goal);
-
-
+		this.recorder = new Recorder(this.goal, selfParam);
 	}
 
 	// Use this for initialization
 	protected override void Start () {
 		base.Start ();
 		if (isRecording) {
-			_recorder.InitializeFile (recordingFilename);
+			recorder.InitializeFile (recordingFilename);
 		}
 
 	}
@@ -57,7 +61,7 @@ public class HumanController : Player {
 		}
 
 		if (isRecording) {
-			_recorder.WriteToFile (debug: true);
+			recorder.WriteToFile (debug: true);
 		}
 		// do this last because we need to update the instance variables with the input
 		base.Update ();

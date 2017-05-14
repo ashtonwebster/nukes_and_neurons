@@ -22,11 +22,6 @@ public class Player : GenericFirstPersonController {
 	protected bool isFiring;
 	protected double nextAllowedFiringTime = 0;
 
-//	public int ammo_amount = 5;
-//	public int num_grenades;
-//	public int num_bombs;
-//	public int num_tripmines;
-//	public int num_sticky;
 	public enum bomb_types { BOMB=0, GRENADE=1, TRIPMINE=2, STICKY=3 };
 	protected int currentWeapon = (int) bomb_types.BOMB;
 	private ColoredCubesVolume coloredCubesVolume;
@@ -87,6 +82,7 @@ public class Player : GenericFirstPersonController {
 	public void doDamage(float damage) {
 		damaged = true;
 		health -= damage;
+		Debug.Log(string.Format("player {0} healthslider {1}", this.playerNum, healthSlider));
 		healthSlider.value = health;
 		publicHealthBar.value = health;
 		if (health <= 0) {
@@ -98,10 +94,11 @@ public class Player : GenericFirstPersonController {
 	{
 		Vector3 pos = transform.position;
 		pos.y += 1 + GetComponent<Collider> ().bounds.size.y;
-		float speed = this.m_IsWalking ? 2 : 4;
+		// add bomb speed to current velocity of object
+		float speed = this.GetComponent<Rigidbody> ().velocity.magnitude + (this.m_IsWalking ? 2 : 4);
 		Transform bombToThrow;
-		Debug.Log ("Throwing:");
-		Debug.Log (currentWeapon);
+		//Debug.Log ("Throwing:");
+		//Debug.Log (currentWeapon);
 		switch (currentWeapon) {
 		case (int) bomb_types.BOMB:
 			bombToThrow = BombPrefab;
@@ -141,11 +138,6 @@ public class Player : GenericFirstPersonController {
 			dying = true;
 		}
 
-//		if (!usingJoystick) {
-//			this.m_IsWalking = (!Input.GetKey (KeyCode.LeftShift));
-//		} else {
-//			this.m_IsWalking = (!Input.GetButton ("Joy Shift"));
-//		}
 		if (damaged) {
 			damageImage.color = flashColor;
 		} else {
@@ -157,26 +149,6 @@ public class Player : GenericFirstPersonController {
 			ThrowBomb ();
 			this.nextAllowedFiringTime = this.GetEpochTime() + this.firingCooldown;
 		}
-
-//		if (!usingJoystick) {
-//			if (Input.GetKey (KeyCode.Alpha1)) {
-//				currentWeapon = (int)bomb_types.BOMB;
-//				Debug.Log ("Switching to BOMB!");
-//			}
-//			if (Input.GetKey (KeyCode.Alpha2)) {
-//				currentWeapon = (int)bomb_types.GRENADE;
-//				Debug.Log ("Switching to GRENADE!");
-//			}
-//			if (Input.GetKey (KeyCode.Alpha3)) {
-//				currentWeapon = (int)bomb_types.TRIPMINE;
-//				Debug.Log ("Switching to TRIPMINE!");
-//			}
-//		} else {
-//			if (Input.GetButtonDown ("Joy Toggle Forward")) {
-//				currentWeapon = (currentWeapon + 1) % 3;
-//			}
-////			Debug.Log (currentWeapon);
-
 
 	}
 }

@@ -14,11 +14,10 @@ public class AIController : Player {
 	protected override void Start() { 
 		// train the model based on previous input
 		this.network = new NeuralNetwork(this.goalState);
-		//string trainingDir = System.Environment.GetEnvironmentVariable ("TRAINING_DIR");
-		//network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/yrot_good_test_data.txt");
-		//network.TrainAINetwork (System.Environment.CurrentDirectory + "/training_data/xyrot_data.txt");
-		network.TrainAINetwork (inputPath: System.Environment.CurrentDirectory + "/training_data/training_everything.txt",
-			serializePath: System.Environment.CurrentDirectory + "/training_data/serialized_model.bin");
+//		network.TrainAINetwork (inputPath: System.Environment.CurrentDirectory + "/training_data/training_everything.txt",
+//			serializePath: System.Environment.CurrentDirectory + "/training_data/serialized_model.bin");
+		network.TrainAINetwork(inputPath: System.Environment.CurrentDirectory + "/training_data/human_controller_data.txt",
+			serializePath: System.Environment.CurrentDirectory + "/training_data/model1.bin");
 		_m_AIMouseLook = new AIMouseLook (network, this.goalState);
 		
 		base.Start ();
@@ -37,6 +36,7 @@ public class AIController : Player {
 		GameStateSummary gss = new GameStateSummary(this.goalState);
 		gss.InitializeFromGame(this.gameObject, GameObject.Find("AIFirstPersonCharacter"));
 		ObservedAction action = this.network.GetPredictedAction (gss);
+		m_IsWalking = true; // just don't sprint for now
 		float horizontal = action.horizontalPan;
 		//float vertical = CrossPlatformInputManager.GetAxis("Vertical");
 		float vertical = action.forwardPan;
@@ -44,11 +44,8 @@ public class AIController : Player {
 
 		bool waswalking = this.m_IsWalking;
 
-		#if !MOBILE_INPUT
-		// On standalone builds, walk/run speed is modified by a key press.
-		// keep track of whether or not the character is walking or running
-		m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
-		#endif
+
+
 		// set the desired speed to be walking or running
 		speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
 		m_Input = new Vector2(horizontal, vertical);

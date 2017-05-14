@@ -36,13 +36,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 		/// <summary>
-		/// overloaded; defaults to not using joystick
-		/// </summary>
-		protected virtual void GetRotationInput() {
-			GetRotationInput (usingJoystick: false);
-		}
-
-		/// <summary>
 		/// sets the rotation x and y values.  This allows the AIMouseLook to overwrite
 		/// the values.  This might be the opposite of what you expect for x and y,
 		/// but you are rotating AROUND these AXES, not the direction of the movement.

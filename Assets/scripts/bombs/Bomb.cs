@@ -46,7 +46,7 @@ public class Bomb : MonoBehaviour {
 	}
 
 	public virtual void OnCollisionEnter(Collision other) {
-		Debug.Log (other.gameObject.name);
+		//Debug.Log (other.gameObject.name);
 		Explode();
 	}
 	public void Explode() {
@@ -58,7 +58,7 @@ public class Bomb : MonoBehaviour {
 		coloredCubes.SendMessage ("Attack", explosionPos); 
 
 		Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-		Debug.Log (colliders.Length);
+		//Debug.Log (colliders.Length);
 		foreach (Collider hit in colliders) {
 			Rigidbody rb = hit.GetComponent<Rigidbody>();
 			if (rb != null) {

@@ -7,8 +7,10 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class Initialization : MonoBehaviour {
 
 	public GameObject player1Prefab, player2Prefab;
+	public bool isPlayer2Recording;
 	private ColoredCubesVolume coloredCubesVolume;
 	public int numPlayers = 2;
+	private GameObject player1, player2;
 	// Use this for initialization
 	void Start () {
 		coloredCubesVolume = GetComponent<ColoredCubesVolume>();
@@ -24,29 +26,37 @@ public class Initialization : MonoBehaviour {
 		return temp;
 	}
 
-	void spawn() {
-		GameObject player1 = Instantiate(player1Prefab, getSpawnPos(), Quaternion.identity);
-		if (numPlayers == 2) {
-			player1.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, 0.5f, 1);
-			GameObject player2 = Instantiate (player2Prefab, getSpawnPos (), Quaternion.identity);
-			player2.GetComponentInChildren<Camera> ().rect = new Rect (0.5f, 0, 1, 1);
-			player2.GetComponent<GenericFirstPersonController> ().usingJoystick = false;
-			player2.GetComponent<Player> ().playerNum = 2;
+	public void initPlayer1() {
+		this.player1 = Instantiate(player1Prefab, getSpawnPos(), Quaternion.identity);
+		this.player1.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, 0.5f, 1);
+		if (this.player2 != null) {
+			this.player2.GetComponent<HumanController> ().recorder.goal = this.player1;
 		}
 	}
 
-	void respawn(int player) {
-		Debug.Log ("Respawning player!");
-		Debug.Log (player);
-		if (player == 1) {
-			GameObject player1 = Instantiate (player1Prefab, getSpawnPos(), Quaternion.identity);
-			player1.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, 0.5f, 1);
-		} else {
-			GameObject player2 = Instantiate (player2Prefab, getSpawnPos (), Quaternion.identity);
-			player2.GetComponentInChildren<Camera> ().rect = new Rect (0.5f, 0, 1, 1);
-			player2.GetComponent<GenericFirstPersonController> ().usingJoystick = false;
-			player2.GetComponent<Player> ().playerNum = 2;
+	public void initPlayer2() { 
+		this.player2 = Instantiate (player2Prefab, getSpawnPos (), Quaternion.identity);
+		this.player2.GetComponent<HumanController> ().Initialize (goalParam: this.player1, selfParam: player2.gameObject);
+		this.player2.GetComponent<HumanController> ().isRecording = this.isPlayer2Recording;
+		this.player2.GetComponent<HumanController> ().usingJoystick = false;
+		this.player2.GetComponentInChildren<Camera> ().rect = new Rect (0.5f, 0, 1, 1);
+		player2.GetComponent<Player> ().playerNum = 2;
+	}
 
+	void spawn() {
+		this.initPlayer1 ();
+		if (numPlayers == 2) {
+			this.initPlayer2 ();
+		}
+	}
+
+	void respawn(int playerNumber) {
+		//Debug.Log ("Respawning player!");
+		//Debug.Log (player);
+		if (playerNumber == 1) {
+			this.initPlayer1 ();
+		} else {
+			this.initPlayer2 ();
 		}
 	}
 
@@ -56,6 +66,7 @@ public class Initialization : MonoBehaviour {
 	}
 
 	void Attack(Vector3 location) {
+		// what the hell is going on here?  Could a for loop replace this
 		do_hit (Vector3.down, location);
 		do_hit ((Vector3.up + Vector3.forward) / 2, location);
 		do_hit ((Vector3.up + Vector3.back) / 2, location);
