@@ -39,7 +39,7 @@ public class Recorder {
 
 		// write to file with features and target movements
 		if (debug) { 
-			Debug.Log (trainingPair.ToString ());
+			//debug.Log (trainingPair.ToString ());
 		}
 		file.WriteLine (trainingPair.ToString());
 		file.Flush ();

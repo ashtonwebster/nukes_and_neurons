@@ -27,9 +27,9 @@ public class NeuralNetwork {
 	}
 
 	public void InitNetwork() {
-		// currently network has 3 input, 5 hidden nodes, and 1 output
+		// currently network has 3 input, 5 hidden nodes, and 7 output
 		this.network = new ActivationNetwork(new BipolarSigmoidFunction(ALPHA),
-			3, 50, 5);
+			3, 50, 7);
 		
 		this.teacher = new ParallelResilientBackpropagationLearning(this.network);
 	}
@@ -56,16 +56,21 @@ public class NeuralNetwork {
 			line = line.Trim ();
 			tp.InitializeFromSaved (line);
 			trainingList.Add(tp);
-			if (tp.observedAction.xRotInput != 0.0f || tp.observedAction.yRotInput != 0.0f || tp.observedAction.forwardPan != 0.0f) {
+			if (tp.observedAction.xRotInput != 0.0f || tp.observedAction.yRotInput != 0.0f || tp.observedAction.forwardPan != 0.0f
+				|| tp.observedAction.horizontalPan != 0.0f ) {
 				// only add non-zero examples for now
-				input.Add (new List<double> () { tp.gameStateSummary.XZAngleToObj, 
+				input.Add (new List<double> () { 
+					tp.gameStateSummary.XZAngleToObj, 
 					tp.gameStateSummary.YZAngletoObj, 
 					tp.gameStateSummary.distToObj});
-				output.Add (new List<double> () { tp.observedAction.yRotInput, 
+				output.Add (new List<double> () { 
+					tp.observedAction.yRotInput, 
 					tp.observedAction.xRotInput,
 					tp.observedAction.horizontalPan,
-					tp.observedAction.forwardPan, 
-					tp.observedAction.fireButtonDown
+					tp.observedAction.forwardPan,
+					tp.observedAction.fireButtonDown,
+					tp.observedAction.sprintButtonDown,
+					tp.observedAction.jumpButtonDown
 				} );
 			}
 		}
@@ -107,6 +112,8 @@ public class NeuralNetwork {
 		action.horizontalPan = (float)output [2];
 		action.forwardPan = (float)output [3];
 		action.fireButtonDown = (float)output [4];
+		action.sprintButtonDown = (float)output [5];
+		action.jumpButtonDown = (float)output [6];
 		return action;
 	}
 

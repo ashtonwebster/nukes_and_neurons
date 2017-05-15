@@ -28,7 +28,6 @@ public class HumanController : Player {
 		if (isRecording) {
 			recorder.InitializeFile (recordingFilename);
 		}
-
 	}
 	
 	// Update is called once per frame

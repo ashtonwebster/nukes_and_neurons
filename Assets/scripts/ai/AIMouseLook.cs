@@ -9,7 +9,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class AIMouseLook : MouseLook {
 
 	private NeuralNetwork network;
-	private GameObject goal;
+	public GameObject goal;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AIMouseLook"/> class.
@@ -34,9 +34,9 @@ public class AIMouseLook : MouseLook {
 		ObservedAction action = this.network.GetPredictedAction (gss);
 		// uncomment to print current action as CSV
 		//Debug.Log (action);
-		this.yInput = action.yRotInput; //* 5.0f;
-		//this.xInput = action.xRotInput; //* 5.0f;
-		this.xInput = 0f;
+		this.yInput = action.yRotInput;
+		this.xInput = 0f; //action.xRotInput; //* 5.0f;
+		//this.xInput = 0f;
 	}
 
 }

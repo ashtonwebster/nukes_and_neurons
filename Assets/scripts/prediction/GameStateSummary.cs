@@ -41,10 +41,12 @@ public class GameStateSummary {
 	}
 
 
+	public string PrettyPrint() {
+		return string.Format ("xzangle {0}, yzangle {1}, dist2obj {2}",XZAngleToObj, YZAngletoObj, distToObj);
+	}
+
 	public override string ToString() {
 		return string.Format ("{0},{1},{2}", XZAngleToObj, YZAngletoObj, distToObj);
-			
-
 	}
 
 	float GetXZangleToObj() {

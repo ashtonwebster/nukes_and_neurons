@@ -21,7 +21,7 @@ public class Initialization : MonoBehaviour {
 
 	Vector3 getSpawnPos() {
 		PickVoxelResult pickResult;
-		Vector3 spawnLoc = new Vector3 (Random.Range (0, 50), 100, Random.Range (0, 50));
+		Vector3 spawnLoc = new Vector3 (Random.Range (50, 100), 100, Random.Range (50, 100));
 		Picking.PickFirstSolidVoxel(coloredCubesVolume, spawnLoc, Vector3.down, 100f, out pickResult);
 		Vector3 temp =  pickResult.worldSpacePos;
 		temp.y += 2;
@@ -35,6 +35,7 @@ public class Initialization : MonoBehaviour {
 		if (this.player2 != null) {
 			this.player2.GetComponent<HumanController> ().recorder.goal = this.player1;
 		}
+
 	}
 
 	public void initPlayer2() { 
@@ -52,6 +53,8 @@ public class Initialization : MonoBehaviour {
 		if (numPlayers == 2) {
 			this.initPlayer2 ();
 		}
+		this.setAIGoal ();
+
 	}
 
 	void respawn(int playerNumber) {
@@ -61,6 +64,17 @@ public class Initialization : MonoBehaviour {
 			this.initPlayer1 ();
 		} else {
 			this.initPlayer2 ();
+		}
+		this.setAIGoal ();
+
+	}
+
+	void setAIGoal() {
+		AIController ai = this.player1.GetComponent<AIController> ();
+		if (ai != null) {
+			// if p1 is the AI, set the goal state
+			ai.goalState = this.player2;
+			ai._m_AIMouseLook.goal = this.player2;
 		}
 	}
 

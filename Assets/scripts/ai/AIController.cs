@@ -6,7 +6,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class AIController : Player {
 
 	//this may ignore the public settings...
-	protected AIMouseLook _m_AIMouseLook;
+	public AIMouseLook _m_AIMouseLook;
 	private NeuralNetwork network;
 
 	public GameObject goalState;
@@ -16,8 +16,8 @@ public class AIController : Player {
 		this.network = new NeuralNetwork(this.goalState);
 //		network.TrainAINetwork (inputPath: System.Environment.CurrentDirectory + "/training_data/training_everything.txt",
 //			serializePath: System.Environment.CurrentDirectory + "/training_data/serialized_model.bin");
-		network.TrainAINetwork(inputPath: System.Environment.CurrentDirectory + "/training_data/human_controller_data.txt",
-			serializePath: System.Environment.CurrentDirectory + "/training_data/model1.bin");
+		network.TrainAINetwork(inputPath: System.Environment.CurrentDirectory + "/training_data/data3.txt",
+			serializePath: System.Environment.CurrentDirectory + "/training_data/data3.bin");
 		_m_AIMouseLook = new AIMouseLook (network, this.goalState);
 		
 		base.Start ();
@@ -36,11 +36,13 @@ public class AIController : Player {
 		GameStateSummary gss = new GameStateSummary(this.goalState);
 		gss.InitializeFromGame(this.gameObject, GameObject.Find("AIFirstPersonCharacter"));
 		ObservedAction action = this.network.GetPredictedAction (gss);
-		m_IsWalking = true; // just don't sprint for now
+		Debug.Log (string.Format ("{0}|{1}", gss.PrettyPrint(), action.PrettyPrint()));
+		this.isJumping = action.jumpButtonDown > 0.5; //TODO: tune these magic thresholds
+		m_IsWalking = !(action.sprintButtonDown > 0.5); 
 		float horizontal = action.horizontalPan;
 		//float vertical = CrossPlatformInputManager.GetAxis("Vertical");
 		float vertical = action.forwardPan;
-		this.isFiring = (action.fireButtonDown > 0.08f);
+		this.isFiring = (action.fireButtonDown > 0.15f);
 
 		bool waswalking = this.m_IsWalking;
 
