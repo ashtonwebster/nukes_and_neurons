@@ -8,6 +8,7 @@ public class VoxelDestroy : MonoBehaviour {
 	private ColoredCubesVolume coloredCubesVolume;
 	public int destructionRange = 2;
 	public bool destroyAllOnImpact = false;
+	public bool isDestroyed = false;
 	void Start () {
 		coloredCubesVolume = GetComponent<ColoredCubesVolume>();
 	}
@@ -39,6 +40,8 @@ public class VoxelDestroy : MonoBehaviour {
 	}
 	void destroy() {
 		if (destroyAllOnImpact) {
+			Debug.Log ("Destroying...");
+			Debug.Log (gameObject.name);
 			Destroy (gameObject);
 		}
 	}
@@ -48,6 +51,7 @@ public class VoxelDestroy : MonoBehaviour {
 		if(hit)
 		{					
 			DestroyVoxels(pickResult.volumeSpacePos.x, pickResult.volumeSpacePos.y, pickResult.volumeSpacePos.z, destructionRange);
+			isDestroyed = true;
 			Invoke ("destroy", 6);
 		}
 	}

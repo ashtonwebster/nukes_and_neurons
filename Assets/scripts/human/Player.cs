@@ -13,7 +13,7 @@ public class Player : GenericFirstPersonController {
 	public float max_health = 100;
 	public Slider healthSlider;
 	public Slider publicHealthBar;
-
+	public bool canThrowBombs = true;
 	protected float health = 100;
 	public Color flashColor = new Color(1f, 0f, 0f, 0.5f);
 	public float flashSpeed = 5f;
@@ -106,6 +106,9 @@ public class Player : GenericFirstPersonController {
 
 	private void ThrowBomb() 
 	{
+		if (!this.canThrowBombs) {
+			return;
+		}
 		Vector3 pos = transform.position;
 		pos.y += 1 + GetComponent<Collider> ().bounds.size.y;
 		// add bomb speed to current velocity of object

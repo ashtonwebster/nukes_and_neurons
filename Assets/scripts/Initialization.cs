@@ -14,7 +14,8 @@ public class Initialization : MonoBehaviour {
 	private GameObject player1, player2;
 	// Use this for initialization
 	void Start () {
-		coloredCubesVolume = world.GetComponent<ColoredCubesVolume>();
+		world = gameObject;
+		coloredCubesVolume = gameObject.GetComponent<ColoredCubesVolume>();
 		Invoke ("spawn", 2); 
 	}
 
