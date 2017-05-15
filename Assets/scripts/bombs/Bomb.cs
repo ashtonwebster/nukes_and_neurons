@@ -54,6 +54,7 @@ public class Bomb : MonoBehaviour {
 	}
 
 	public void Explode() {
+		this.coloredCubes.SendMessage ("Attack", transform.position); 
 		Explode(damage);
 	}
 

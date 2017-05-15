@@ -20,9 +20,11 @@ public class MenuProgression : MonoBehaviour {
 	private GameObject menuController;
 
 	private bool slerpMenusDown = false;
-	private bool slerpMenusUp = false;
+	private bool lerpMenuController = false;
 	private bool initMenus = true;
 	private string menuStep = "init";
+	private int menuChosen = 0;
+
 	// Use this for initialization
 	void Start () {
 		menuController = Instantiate (menuControllerPrefab, new Vector3 (30, 60, -30), Quaternion.identity);
@@ -33,7 +35,6 @@ public class MenuProgression : MonoBehaviour {
 	}
 
 	int handleDualMenus(GameObject menu1Prefab, GameObject menu2Prefab) {
-
 		//First, instantiate the menus
 		if (initMenus) {
 			this.menu1 = Instantiate (menu1Prefab, new Vector3 (-20, 100, 0), Quaternion.Euler (0, 315, 0));
@@ -41,6 +42,7 @@ public class MenuProgression : MonoBehaviour {
 			slerpMenusDown = true;
 			menuController.GetComponent<Player> ().canThrowBombs = true; //reenable bomb throwing
 			initMenus = false;
+			menuChosen = 0;
 		}
 
 		//First, lerp the menus down to the user. 
@@ -48,11 +50,11 @@ public class MenuProgression : MonoBehaviour {
 			this.menu1.transform.position = Vector3.Lerp (this.menu1.transform.position, new Vector3 (15, 50, 0), Time.deltaTime);
 			this.menu2.transform.position = Vector3.Lerp (this.menu2.transform.position, new Vector3 (45, 50, 0), Time.deltaTime);
 		} else { //If we're done, lerp them out
-			if (this.menu1 != null) {
-				this.menu1.transform.position = Vector3.Lerp (this.menu1.transform.position, new Vector3 (-20, 100, 0), Time.deltaTime/2);
+			if (this.menu1 != null && menuChosen == 2) {
+				this.menu1.transform.position = Vector3.Lerp (this.menu1.transform.position, new Vector3 (-20, 200, 0), Time.deltaTime/4);
 			}
-			if (this.menu2 != null) {
-				this.menu2.transform.position = Vector3.Lerp (this.menu2.transform.position, new Vector3 (80, 100, 0), Time.deltaTime/2);
+			if (this.menu2 != null && menuChosen == 1) {
+				this.menu2.transform.position = Vector3.Lerp (this.menu2.transform.position, new Vector3 (80, 200, 0), Time.deltaTime/4);
 			}
 		}
 
@@ -73,7 +75,11 @@ public class MenuProgression : MonoBehaviour {
 			Destroy (this.menu1);
 			return 2;
 		}
-
+		if (this.menu1.GetComponent<VoxelDestroy> ().isDestroyed) {
+			menuChosen = 1;
+		} else if (this.menu2.GetComponent<VoxelDestroy> ().isDestroyed) {
+			menuChosen = 2;
+		}
 		//If the player has decided and destroyed one, disable bomb throwing until next menu appears
 		if (this.menu1.GetComponent<VoxelDestroy> ().isDestroyed || this.menu2.GetComponent<VoxelDestroy> ().isDestroyed) {
 			menuController.GetComponent<Player> ().canThrowBombs = false;
@@ -81,6 +87,11 @@ public class MenuProgression : MonoBehaviour {
 		}
 		//!this.menu1.GetComponent<VoxelDestroy> ().isDestroyed && this.menu2.GetComponent<VoxelDestroy> ().isDestroyed
 		return 0;
+	}
+
+	void destroyMenuController() {
+		lerpMenuController = false;
+		Destroy (menuController);
 	}
 
 	void Update () {
@@ -99,14 +110,21 @@ public class MenuProgression : MonoBehaviour {
 			if (choice != 0) {
 				menuStep = "gameMode";
 				world = Instantiate (worldPrefab);
-				world.GetComponent<Initialization>().player2Prefab = humanController;
-				Destroy (menuController);
+				world.GetComponent<Initialization> ().player2Prefab = humanController;
+				lerpMenuController = true;
+
 			}
 			if (choice == 1) { //1v1 chosen
-				world.GetComponent<Initialization>().player1Prefab = humanController;
+				world.GetComponent<Initialization> ().player1Prefab = humanController;
 			} else if (choice == 2) { //ai chosen
-				world.GetComponent<Initialization>().player1Prefab = aiController;
+				world.GetComponent<Initialization> ().player1Prefab = aiController;
 			}
+		} else if (menuStep == "gameMode") {
+			if (lerpMenuController) {
+				menuController.transform.position = Vector3.Lerp (menuController.transform.position, new Vector3 (10, 20, 10), Time.deltaTime * 1.5f);
+				Invoke("destroyMenuController", 2);
+			}
+
 		}
 			
 			//world = Instantiate (cityPrefab);
