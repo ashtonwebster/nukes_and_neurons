@@ -20,9 +20,10 @@ public class MenuProgression : MonoBehaviour {
 	private GameObject menuController;
 
 	private bool slerpMenusDown = false;
-	private bool slerpMenusUp = false;
+	private bool lerpMenuController = false;
 	private bool initMenus = true;
 	private string menuStep = "init";
+
 	// Use this for initialization
 	void Start () {
 		menuController = Instantiate (menuControllerPrefab, new Vector3 (30, 60, -30), Quaternion.identity);
@@ -83,6 +84,11 @@ public class MenuProgression : MonoBehaviour {
 		return 0;
 	}
 
+	void destroyMenuController() {
+		lerpMenuController = false;
+		Destroy (menuController);
+	}
+
 	void Update () {
 		int choice;
 		if (menuStep == "init") {
@@ -99,14 +105,21 @@ public class MenuProgression : MonoBehaviour {
 			if (choice != 0) {
 				menuStep = "gameMode";
 				world = Instantiate (worldPrefab);
-				world.GetComponent<Initialization>().player2Prefab = humanController;
-				Destroy (menuController);
+				world.GetComponent<Initialization> ().player2Prefab = humanController;
+				lerpMenuController = true;
+
 			}
 			if (choice == 1) { //1v1 chosen
-				world.GetComponent<Initialization>().player1Prefab = humanController;
+				world.GetComponent<Initialization> ().player1Prefab = humanController;
 			} else if (choice == 2) { //ai chosen
-				world.GetComponent<Initialization>().player1Prefab = aiController;
+				world.GetComponent<Initialization> ().player1Prefab = aiController;
 			}
+		} else if (menuStep == "gameMode") {
+			if (lerpMenuController) {
+				menuController.transform.position = Vector3.Lerp (menuController.transform.position, new Vector3 (10, 20, 10), Time.deltaTime * 1.5f);
+				Invoke("destroyMenuController", 2);
+			}
+
 		}
 			
 			//world = Instantiate (cityPrefab);
