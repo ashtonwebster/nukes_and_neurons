@@ -46,7 +46,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         protected bool m_Jumping;
         protected AudioSource m_AudioSource;
 		public bool usingJoystick;
-
+		protected Rigidbody rb;
 		protected bool isJumping;
 		protected bool resetView;
 
@@ -74,6 +74,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+			rb = GetComponent<Rigidbody> ();
         }
 
 
@@ -151,7 +152,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             else
             {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+				if (rb.useGravity) {
+					m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+				}
             }
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 

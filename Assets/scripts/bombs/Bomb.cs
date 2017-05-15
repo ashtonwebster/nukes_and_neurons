@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cubiquity;
-
+using Cubiquity.Impl;
 public class Bomb : MonoBehaviour {
 
 	// Use this for initialization
@@ -14,23 +14,26 @@ public class Bomb : MonoBehaviour {
 	private bool exploding;
 	protected float damage = 100;
 	public GameObject coloredCubes;
-	protected ColoredCubesVolume coloredCubesVolume;
+	private ColoredCubesVolume coloredCubesVolume;
 
 	private readonly Color32[] colors = { new Color32(255, 0, 0, 255), new Color32(255, 69, 0, 255), new Color32(255, 140, 0, 255), new Color32(255, 255, 0, 255) }; 
 
 	public virtual void Start()
 	{
-		coloredCubes = GameObject.Find ("World");
-		coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume>();
+		//coloredCubes = GameObject.Find ("World");
+		//coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume>();
 		exploding = false;
 	}
 	public virtual void Awake()
 	{
-		coloredCubes = GameObject.Find ("World");
-		coloredCubesVolume = coloredCubes.gameObject.GetComponent<ColoredCubesVolume>();
+		//coloredCubes = GameObject.Find ("World");
+		//coloredCubesVolume = coloredCubes.gameObject.GetComponent<ColoredCubesVolume>();
 		exploding = false;
 	}
-
+	public void setColoredCubes(GameObject coloredCubes) {
+		this.coloredCubes = coloredCubes;
+		this.coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume>();
+	}
 	public virtual void LateUpdate() {
 		if (exploding) {
 			ParticleSystem.Particle[] particles = new ParticleSystem.Particle[explosionSystem.main.maxParticles];
@@ -46,17 +49,16 @@ public class Bomb : MonoBehaviour {
 	}
 
 	public virtual void OnCollisionEnter(Collision other) {
-		//Debug.Log (other.gameObject.name);
+		this.coloredCubes.SendMessage ("Attack", transform.position); 
 		Explode();
 	}
+
 	public void Explode() {
 		Explode(damage);
 	}
 
 	public void Explode(float gdamage) {
 		Vector3 explosionPos = transform.position;
-		coloredCubes.SendMessage ("Attack", explosionPos); 
-
 		Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
 		//Debug.Log (colliders.Length);
 		foreach (Collider hit in colliders) {

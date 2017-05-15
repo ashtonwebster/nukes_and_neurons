@@ -13,7 +13,7 @@ public class Player : GenericFirstPersonController {
 	public float max_health = 100;
 	public Slider healthSlider;
 	public Slider publicHealthBar;
-
+	public bool canThrowBombs = true;
 	protected float health = 100;
 	public Color flashColor = new Color(1f, 0f, 0f, 0.5f);
 	public float flashSpeed = 5f;
@@ -21,18 +21,19 @@ public class Player : GenericFirstPersonController {
 	private bool damaged;
 	protected bool isFiring;
 	protected double nextAllowedFiringTime = 0;
-
+	public float throwSpeed = 2f;
 	public enum bomb_types { BOMB=0, GRENADE=1, TRIPMINE=2, STICKY=3 };
 	protected int currentWeapon = (int) bomb_types.BOMB;
-	private ColoredCubesVolume coloredCubesVolume;
+	public ColoredCubesVolume coloredCubesVolume;
 	private bool exploding = false;
 	public ParticleSystem prefabExplosion;
 	private ParticleSystem explosionSystem;
 	private Color32[] colors;
 	private bool dying = false;
-	private GameObject world;
+	public GameObject world;
 	public int playerNum;
 	private Transform mycam;
+	public GameObject coloredCubes;
 
 	// Use this for initialization
 	protected override void Start () {
@@ -41,11 +42,20 @@ public class Player : GenericFirstPersonController {
 		// doesn't seem to run if not defined here
 		this.colors = new Color32[] { new Color32(255, 0, 0, 255), new Color32(255, 69, 0, 255), new Color32(255, 140, 0, 255), new Color32(255, 255, 0, 255) }; 
 //		setAmmo ();
-		world = GameObject.Find ("World");
-		coloredCubesVolume = world.GetComponent<ColoredCubesVolume>();
+		/*coloredCubes = GameObject.Find ("World");
+		if (coloredCubes != null) {
+			coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume> ();
+		}*/
 		mycam = GetComponent<GenericFirstPersonController> ().m_Camera.transform;
 
 		//Initialization i = world.GetComponent<Initialization> ();
+	}
+
+	public void setColoredCubes(GameObject coloredCubes) {
+		Debug.Log (coloredCubes);
+		this.coloredCubes = coloredCubes;
+		this.coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume>();
+		Debug.Log (this.coloredCubesVolume);
 	}
 
 	Vector3 getSpawnPos() {
@@ -70,7 +80,7 @@ public class Player : GenericFirstPersonController {
 			explosionSystem.SetParticles (particles, numParticlesAlive);
 			exploding = false;
 			Destroy (gameObject);
-			world.SendMessage ("respawn", playerNum);
+			coloredCubes.SendMessage ("respawn", playerNum);
 		}
 	}
 	public void die() {
@@ -82,9 +92,13 @@ public class Player : GenericFirstPersonController {
 	public void doDamage(float damage) {
 		damaged = true;
 		health -= damage;
-		Debug.Log(string.Format("player {0} healthslider {1}", this.playerNum, healthSlider));
-		healthSlider.value = health;
-		publicHealthBar.value = health;
+		if (healthSlider != null) {
+			healthSlider.value = health;
+			publicHealthBar.value = health;
+			Debug.Log(string.Format("player {0} healthslider {1}", this.playerNum, healthSlider));
+
+		}
+
 		if (health <= 0) {
 			dying = true;
 		}
@@ -92,10 +106,13 @@ public class Player : GenericFirstPersonController {
 
 	private void ThrowBomb() 
 	{
+		if (!this.canThrowBombs) {
+			return;
+		}
 		Vector3 pos = transform.position;
 		pos.y += 1 + GetComponent<Collider> ().bounds.size.y;
 		// add bomb speed to current velocity of object
-		float speed = this.GetComponent<Rigidbody> ().velocity.magnitude + (this.m_IsWalking ? 2 : 4);
+		float speed = this.GetComponent<Rigidbody> ().velocity.magnitude + (this.m_IsWalking ? 1 : 2) * throwSpeed;
 		Transform bombToThrow;
 		//Debug.Log ("Throwing:");
 		//Debug.Log (currentWeapon);
@@ -114,8 +131,8 @@ public class Player : GenericFirstPersonController {
 			break;
 		}
 		Transform bomb = Instantiate (bombToThrow, pos, Quaternion.identity);
-
-		bomb.GetComponent<Rigidbody>().AddForce (speed * mycam.transform.forward * 250 * Random.Range(0.8f, 1.2f));
+		bomb.gameObject.GetComponent<Bomb> ().setColoredCubes(coloredCubes);
+		bomb.GetComponent<Rigidbody>().AddForce (speed * mycam.transform.forward * Random.Range(0.8f, 1.2f), ForceMode.Impulse);
 	}
 
 	double GetEpochTime() {
