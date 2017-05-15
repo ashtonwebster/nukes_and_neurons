@@ -52,7 +52,7 @@ public class VoxelDestroy : MonoBehaviour {
 		{					
 			DestroyVoxels(pickResult.volumeSpacePos.x, pickResult.volumeSpacePos.y, pickResult.volumeSpacePos.z, destructionRange);
 			isDestroyed = true;
-			Invoke ("destroy", 6);
+			Invoke ("destroy", 5);
 		}
 	}
 
