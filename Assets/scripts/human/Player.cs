@@ -114,8 +114,6 @@ public class Player : GenericFirstPersonController {
 		// add bomb speed to current velocity of object
 		float speed = this.GetComponent<Rigidbody> ().velocity.magnitude + (this.m_IsWalking ? 1 : 2) * throwSpeed;
 		Transform bombToThrow;
-		//Debug.Log ("Throwing:");
-		//Debug.Log (currentWeapon);
 		switch (currentWeapon) {
 		case (int) bomb_types.BOMB:
 			bombToThrow = BombPrefab;

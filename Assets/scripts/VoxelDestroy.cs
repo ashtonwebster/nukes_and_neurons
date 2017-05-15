@@ -40,8 +40,6 @@ public class VoxelDestroy : MonoBehaviour {
 	}
 	void destroy() {
 		if (destroyAllOnImpact) {
-			Debug.Log ("Destroying...");
-			Debug.Log (gameObject.name);
 			Destroy (gameObject);
 		}
 	}
