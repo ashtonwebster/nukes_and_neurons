@@ -16,8 +16,10 @@ public class AIController : Player {
 		this.network = new NeuralNetwork(this.goalState);
 //		network.TrainAINetwork (inputPath: System.Environment.CurrentDirectory + "/training_data/training_everything.txt",
 //			serializePath: System.Environment.CurrentDirectory + "/training_data/serialized_model.bin");
-		network.TrainAINetwork(inputPath: System.Environment.CurrentDirectory + "/training_data/data3.txt",
-			serializePath: System.Environment.CurrentDirectory + "/training_data/data3.bin");
+		string trainFile = Config.Instance.node["neural_train_file"].Value;
+		string serializedFile = Config.Instance.node ["neural_serialized_file"].Value;
+		network.TrainAINetwork (inputPath: System.Environment.CurrentDirectory + "/training_data/" + trainFile,
+			serializePath: System.Environment.CurrentDirectory + "/training_data/" + serializedFile);
 		_m_AIMouseLook = new AIMouseLook (network, this.goalState);
 		
 		base.Start ();

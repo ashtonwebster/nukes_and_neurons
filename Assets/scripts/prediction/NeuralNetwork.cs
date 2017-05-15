@@ -29,7 +29,7 @@ public class NeuralNetwork {
 	public void InitNetwork() {
 		// currently network has 3 input, 5 hidden nodes, and 7 output
 		this.network = new ActivationNetwork(new BipolarSigmoidFunction(ALPHA),
-			3, 50, 7);
+			3, Config.Instance.node["num_hidden_nodes"].AsInt, 7);
 		
 		this.teacher = new ParallelResilientBackpropagationLearning(this.network);
 	}

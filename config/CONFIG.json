@@ -1,0 +1,6 @@
+{
+	"recorder_output_file" : "data4.txt",
+	"neural_train_file" : "invalid.txt",
+	"neural_serialized_file" : "data3.bin",
+	"num_hidden_nodes" : 50
+}

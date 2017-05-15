@@ -6,7 +6,6 @@ using UnityStandardAssets.CrossPlatformInput;
 public class HumanController : Player {
 
 	public bool isRecording;
-	public string recordingFilename;
 	public Recorder recorder;
 	public GameObject goal;
 
@@ -26,7 +25,7 @@ public class HumanController : Player {
 	protected override void Start () {
 		base.Start ();
 		if (isRecording) {
-			recorder.InitializeFile (recordingFilename);
+			recorder.InitializeFile (Config.Instance.node ["recorder_output_file"].Value);
 		}
 	}
 	
