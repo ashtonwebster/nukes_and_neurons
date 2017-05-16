@@ -8,7 +8,7 @@ public class Initialization : MonoBehaviour {
 
 	public GameObject player1Prefab, player2Prefab;
 	public bool isPlayer2Recording;
-	public GameObject world;
+	private GameObject world;
 	private ColoredCubesVolume coloredCubesVolume;
 	public int numPlayers = 2;
 	private GameObject player1, player2;
@@ -26,6 +26,12 @@ public class Initialization : MonoBehaviour {
 		Vector3 temp =  pickResult.worldSpacePos;
 		temp.y += 2;
 		return temp;
+	}
+
+	public void teardown() {
+		Destroy (this.player1);
+		Destroy (this.player2);
+		Destroy (gameObject);
 	}
 
 	public void initPlayer1() {
