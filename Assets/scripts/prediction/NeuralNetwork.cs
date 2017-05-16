@@ -57,7 +57,7 @@ public class NeuralNetwork {
 			tp.InitializeFromSaved (line);
 			trainingList.Add(tp);
 			if (tp.observedAction.xRotInput != 0.0f || tp.observedAction.yRotInput != 0.0f || tp.observedAction.forwardPan != 0.0f
-				|| tp.observedAction.horizontalPan != 0.0f ) {
+				|| tp.observedAction.horizontalPan != 0.0f || tp.observedAction.fireButtonDown != 0.0f) {
 				// only add non-zero examples for now
 				input.Add (new List<double> () { 
 					tp.gameStateSummary.XZAngleToObj, 
@@ -77,7 +77,7 @@ public class NeuralNetwork {
 		file.Close ();
 		Debug.Log (string.Format ("Training List Length: {0}", input.Count));
 
-		for (int i = 0; i < 1000; i++) { 
+		for (int i = 0; i < Config.Instance.node["training_epochs"].AsInt ; i++) { 
 			double error = this.teacher.RunEpoch (NestedListToArray(input), NestedListToArray(output));
 			if (i % 50 == 0) { 
 				Debug.Log (string.Format("iteration: {0}, Error: {1}", i, error));
@@ -90,13 +90,6 @@ public class NeuralNetwork {
 				new BinaryFormatter().Serialize(fs, this.network);
 			}    
 		}
-
-
-
-//		TrainingPair tp1 = new TrainingPair();
-//		tp1.InitializeFromSaved ("70.62878,113.9955,3.618909|0,0,-0.2,-0.75,0,0");
-//		Debug.Log("Original: 70.62878,113.9955,3.618909|0,0,-0.2,-0.75,0,0");
-//		Debug.Log ("Parsed : " + tp1.ToString());
 	}
 
 	public double[][] NestedListToArray(List<List<double>> list) { 
@@ -115,42 +108,6 @@ public class NeuralNetwork {
 		action.sprintButtonDown = (float)output [5];
 		action.jumpButtonDown = (float)output [6];
 		return action;
-	}
-
-	/// <summary>
-	/// Test network for illustrative purposes
-	/// </summary>
-	public void RunXORNetwork(){
-		// initialize input and output values
-		double[][] input = null;
-		double[][] output = null;
-		double error = -1;
-
-		input = new double[4][] {
-			new double[] {0, 0},
-			new double[] {0, 1},
-			new double[] {1, 0},
-			new double[] {1, 1}
-		};
-		output = new double[4][] {
-			new double[] {0},
-			new double[] {1},
-			new double[] {1},
-			new double[] {0}
-		};
-
-		ActivationNetwork xornetwork = new ActivationNetwork(new SigmoidFunction(ALPHA),
-			input[0].Length, this.NumNodesFirstLayer, output[0].Length);
-
-		var teacher = new ParallelResilientBackpropagationLearning(xornetwork);
-
-		for (int i = 0; i < 500; i++) {
-			error = teacher.RunEpoch (input, output);
-
-		}
-		Debug.Log (error);
-		Debug.Log (xornetwork.Compute (input [0])[0]);
-
 	}
 
 }

@@ -35,7 +35,7 @@ public class AIMouseLook : MouseLook {
 		// uncomment to print current action as CSV
 		//Debug.Log (action);
 		this.yInput = action.yRotInput;
-		this.xInput = 0f; //action.xRotInput; //* 5.0f;
+		this.xInput = action.xRotInput; //action.xRotInput; //* 5.0f;
 		//this.xInput = 0f;
 	}
 

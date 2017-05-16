@@ -31,6 +31,12 @@ public class HumanController : Player {
 	
 	// Update is called once per frame
 	protected override void Update () {
+		if (this.dying && this.isRecording) { 
+			// stop recording
+			this.recorder.file.Close ();
+		} else if (this.isRecording) { 
+			recorder.WriteToFile (debug: true);
+		}
 
 
 		if (usingJoystick) {
@@ -58,9 +64,7 @@ public class HumanController : Player {
 			this.isJumping = CrossPlatformInputManager.GetButtonDown("JumpKey");
 		}
 
-		if (isRecording) {
-			recorder.WriteToFile (debug: true);
-		}
+
 		// do this last because we need to update the instance variables with the input
 		base.Update ();
 	}

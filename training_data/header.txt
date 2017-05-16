@@ -1,0 +1,2 @@
+XZangleToObj,YZangleToObj,DistToObjhorizontalPan,forwardPan,xRotInput,yRotInput,sprintButtonDown,fireButtonDown,jumpButtonDown
+
