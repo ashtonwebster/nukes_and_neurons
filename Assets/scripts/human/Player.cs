@@ -29,7 +29,7 @@ public class Player : GenericFirstPersonController {
 	public ParticleSystem prefabExplosion;
 	private ParticleSystem explosionSystem;
 	private Color32[] colors;
-	private bool dying = false;
+	public bool dying = false;
 	public GameObject world;
 	public int playerNum;
 	private Transform mycam;
@@ -130,7 +130,7 @@ public class Player : GenericFirstPersonController {
 		}
 		Transform bomb = Instantiate (bombToThrow, pos, Quaternion.identity);
 		bomb.gameObject.GetComponent<Bomb> ().setColoredCubes(coloredCubes);
-		bomb.GetComponent<Rigidbody>().AddForce (speed * mycam.transform.forward * Random.Range(0.8f, 1.2f), ForceMode.Impulse);
+		bomb.GetComponent<Rigidbody>().AddForce (speed * mycam.transform.forward, ForceMode.Impulse);
 	}
 
 	double GetEpochTime() {

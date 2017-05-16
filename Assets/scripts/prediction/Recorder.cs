@@ -22,10 +22,10 @@ public class Recorder {
 	/// </summary>
 	/// <param name="filename">Filename.</param>
 	public void InitializeFile(string filename)  {
-		this.file = new System.IO.StreamWriter (System.Environment.CurrentDirectory + "/training_data/" + filename);
+		this.file = File.AppendText(System.Environment.CurrentDirectory + "/training_data/" + filename);
 
 		// combine the features header and the target movement header
-		file.WriteLine (GameStateSummary.GetHeader () + ObservedAction.GetHeader ());
+		//file.WriteLine (GameStateSummary.GetHeader () + ObservedAction.GetHeader ());
 	}
 
 	/// <summary>
