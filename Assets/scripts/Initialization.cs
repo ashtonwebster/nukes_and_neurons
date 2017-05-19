@@ -48,7 +48,7 @@ public class Initialization : MonoBehaviour {
 	}
 
 	public void setGravity(GameObject player) {
-		if (this.currentWorldName == "City" && this.currentWorldName == "StarWars" ) {
+		if (this.currentWorldName == "City" || this.currentWorldName == "StarWars" ) {
 			player.GetComponent<GenericFirstPersonController> ().m_GravityMultiplier = 0.5f;
 		}
 	}
