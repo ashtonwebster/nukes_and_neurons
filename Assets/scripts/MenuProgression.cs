@@ -10,8 +10,7 @@ public class MenuProgression : MonoBehaviour {
 	public GameObject aiMenuPrefab;
 	public GameObject v1MenuPrefab;
 	public GameObject menuControllerPrefab;
-	public GameObject worldPrefab;
-	public GameObject cityPrefab;
+	public GameObject forwestWorldPrefab, cityPrefab, starwarsPrefab, flatworldPrefab;
 	public GameObject humanController, aiController;
 
 	private GameObject world;
@@ -24,14 +23,34 @@ public class MenuProgression : MonoBehaviour {
 	private bool initMenus = true;
 	private string menuStep = "init";
 	private int menuChosen = 0;
-
+	private string currentWorld = "menus";
 	// Use this for initialization
 	void Start () {
-		menuController = Instantiate (menuControllerPrefab, new Vector3 (30, 60, -30), Quaternion.identity);
+		createMenuController ();
+	}
+
+	void createMenuController() {
+		this.menuController = Instantiate (menuControllerPrefab, new Vector3 (30, 60, -30), Quaternion.identity);
 	}
 
 	void destroy(GameObject menuToDestroy) {
 		Destroy (menuToDestroy);
+	}
+
+	GameObject getRandomPlayWorld() {
+		string[] worlds = {"Forest", "City", "StarWars"};
+		this.currentWorld = worlds[Random.Range (0, worlds.Length)];
+
+		if (currentWorld == "Forest") {
+			return forwestWorldPrefab;
+		} else if (currentWorld == "City") {
+			return cityPrefab;
+		} else if (currentWorld == "StarWars") {
+			return starwarsPrefab;
+		}
+		Debug.Log ("Not sure which world we're doing...");
+		return forwestWorldPrefab;
+
 	}
 
 	int handleDualMenus(GameObject menu1Prefab, GameObject menu2Prefab) {
@@ -100,34 +119,47 @@ public class MenuProgression : MonoBehaviour {
 			choice = handleDualMenus (trainMenuPrefab, playMenuPrefab);
 			if (choice == 1) {
 				menuStep = "train";
-				initMenus = true;
+				this.world = Instantiate(flatworldPrefab);
+				this.world.GetComponent<Initialization> ().player1Prefab = humanController;
+				this.world.GetComponent<Initialization> ().player2Prefab = humanController;
+				this.world.GetComponent<Initialization> ().isPlayer2Recording = true;
+				lerpMenuController = true;
 			} else if (choice == 2) {
 				menuStep = "play";
 				initMenus = true;
+			}
+		} else if (menuStep == "train") {
+			if (lerpMenuController) {
+				menuController.transform.position = Vector3.Lerp (menuController.transform.position, new Vector3 (10, 20, 10), Time.deltaTime * 1.5f);
+				Invoke("destroyMenuController", 2);
 			}
 		} else if (menuStep == "play") {
 			choice = handleDualMenus (v1MenuPrefab, aiMenuPrefab);
 			if (choice != 0) {
 				menuStep = "gameMode";
-				world = Instantiate (worldPrefab);
-				world.GetComponent<Initialization> ().player2Prefab = humanController;
-				lerpMenuController = true;
+				this.lerpMenuController = true;
 
 			}
 			if (choice == 1) { //1v1 chosen
-				world.GetComponent<Initialization> ().player1Prefab = humanController;
+				this.world = Instantiate (getRandomPlayWorld());
+				this.world.GetComponent<Initialization> ().player2Prefab = humanController;
+				this.world.GetComponent<Initialization> ().player1Prefab = humanController;
 			} else if (choice == 2) { //ai chosen
-				world.GetComponent<Initialization> ().player1Prefab = aiController;
+				this.world = Instantiate(flatworldPrefab);
+				this.world.GetComponent<Initialization> ().player1Prefab = aiController;
+				this.world.GetComponent<Initialization> ().player2Prefab = humanController;
 			}
 		} else if (menuStep == "gameMode") {
 			if (lerpMenuController) {
 				menuController.transform.position = Vector3.Lerp (menuController.transform.position, new Vector3 (10, 20, 10), Time.deltaTime * 1.5f);
 				Invoke("destroyMenuController", 2);
 			}
-
 		}
-			
-			//world = Instantiate (cityPrefab);
-		//}
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			world.GetComponent<Initialization> ().teardown ();
+			createMenuController ();
+			initMenus = true;
+			menuStep = "init";
+		}
 	}
 }
