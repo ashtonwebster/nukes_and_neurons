@@ -1,7 +1,7 @@
 # Project Name
 
 What we used from other people:
-* Cubiquity starter code
+* Cubiquity (example environment city, forest, and voxel helper methods)
 * First Person Shooter (Standard Assets)
 * AForge.NET (Neural network libraries)
 
@@ -9,7 +9,19 @@ Unless otherwise indicated, all other code is ours (i.e. everything under script
 
 ## Main Features
 
-Our game is a simple first person shooter.  The main twist is that we use a variety of grenade-like projectiles instead of conventional weapons.
+Our game is a simple first person shooter. Our twist is that the game uses a variety of grenade/bomb-like projectiles instead of conventional weapons in a fully voxelized, dynamic, destructable environment. It supports additional controllers (built for Logitech Gamepad) for local multiplayer, and includes an AI enemy to fight against that learns from the human. 
+
+### Usage
+
+Gameplay starts with a 3D voxel menu for the user to choose between "PLAY" and "TRAIN" (we'll cover TRAIN in the imitation learning section). PLAY creates two more menus to choose between fighting agains the AI that has been trained, or fighting against a local multiplayer. A random voxel world is chosen among a forest world, city world, and a star wars world, and the two users are spawned in it. Hitting "Q" at any time takes the user back to the main menu. 
+
+### Destructable Surroundings
+
+All of the voxel worlds are fully destructable and playable. 
+
+### Multiple Bomb Types
+
+### Controller Support
 
 ### Imitation Learning AI
 
@@ -30,8 +42,4 @@ The resulting model is accessed by the AIController, which basically just wraps 
 
 Training configuration options are controlled by a configuration JSON file in `config/CONFIG.json`.  These parameters include the number of hidden units in the neural network (default 50), output file for training data, output file for training model, and other features.  Thus, new models can be trained without any code modifications by simply modifying the CONFIG file.  More details about the config file is described in the `config/CONFIG.README.md` file.
 
-### Destructable Surroundings
 
-### Multiple Bomb Types
-
-### Controller Support
