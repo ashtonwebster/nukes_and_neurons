@@ -47,12 +47,11 @@ The resulting model is accessed by the AIController, which basically just wraps 
 
 Training configuration options are controlled by a configuration JSON file in `config/CONFIG.json`. These parameters include the number of hidden units in the neural network (default 50), output file for training data, output file for training model, and other features. Thus, new models can be trained without any code modifications by simply modifying the CONFIG file. More details about the config file is described in the `config/CONFIG.README.md` file.
 
-## What we used from other people
+## Acknowledgements
 
 We used some libraries and starter code as a basis for this game.
 
 * Cubiquity (example city and forest world, and voxel helper methods)
 * First Person Shooter (Standard Assets)
 * AForge.NET (Neural network libraries)
-
-Unless otherwise indicated, all other code is ours (i.e. everything under scripts).
+* Farland Skies (for skybox)
