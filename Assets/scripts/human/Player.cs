@@ -52,10 +52,8 @@ public class Player : GenericFirstPersonController {
 	}
 
 	public void setColoredCubes(GameObject coloredCubes) {
-		Debug.Log (coloredCubes);
 		this.coloredCubes = coloredCubes;
 		this.coloredCubesVolume = coloredCubes.GetComponent<ColoredCubesVolume>();
-		Debug.Log (this.coloredCubesVolume);
 	}
 
 	Vector3 getSpawnPos() {
@@ -130,7 +128,8 @@ public class Player : GenericFirstPersonController {
 		}
 		Transform bomb = Instantiate (bombToThrow, pos, Quaternion.identity);
 		bomb.gameObject.GetComponent<Bomb> ().setColoredCubes(coloredCubes);
-		bomb.GetComponent<Rigidbody>().AddForce (speed * mycam.transform.forward, ForceMode.Impulse);
+		bomb.GetComponent<Rigidbody> ().velocity = this.m_CharacterController.velocity;
+		bomb.GetComponent<Rigidbody>().AddForce ((speed * mycam.transform.forward), ForceMode.Impulse);
 	}
 
 	double GetEpochTime() {

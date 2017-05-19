@@ -32,7 +32,7 @@ public class TripMine : Bomb {
 			Collider[] colliders = Physics.OverlapSphere (transform.position, armedRadius);
 			foreach (Collider c in colliders) {
 				if (!c.name.Contains("Octree") && !c.name.Contains("Cube") && !c.name.Contains("TripMine")) {
-					Explode(500);
+					Explode(5);
 					break;
 				}
 			}

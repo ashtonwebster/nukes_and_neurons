@@ -78,7 +78,7 @@ public class MenuProgression : MonoBehaviour {
 		}
 
 		//This is critical for the exploding to work - depending on which way the user is looking, set the coloredCubes to that one
-		if (this.menu1 != null && this.menu2 != null && !this.menu1.GetComponent<VoxelDestroy>().isDestroyed && !this.menu2.GetComponent<VoxelDestroy>().isDestroyed) {
+		if (menuController != null && this.menu1 != null && this.menu2 != null && !this.menu1.GetComponent<VoxelDestroy>().isDestroyed && !this.menu2.GetComponent<VoxelDestroy>().isDestroyed) {
 			if (menuController.transform.rotation.eulerAngles.y > 180) {
 				menuController.GetComponent<Player> ().setColoredCubes (this.menu1); // TODO CHECK FOR NOT SWITCHED
 			} else {

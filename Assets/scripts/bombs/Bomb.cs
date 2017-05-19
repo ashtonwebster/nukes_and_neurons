@@ -49,8 +49,10 @@ public class Bomb : MonoBehaviour {
 	}
 
 	public virtual void OnCollisionEnter(Collision other) {
-		this.coloredCubes.SendMessage ("Attack", transform.position); 
-		Explode();
+		this.coloredCubes.SendMessage ("Attack", transform.position);
+		if (other.gameObject.tag != "Bomb") {
+			Explode ();
+		}
 	}
 
 	public void Explode() {
@@ -67,7 +69,7 @@ public class Bomb : MonoBehaviour {
 			if (rb != null) {
 				rb.AddExplosionForce (power*5, explosionPos, radius * 5, 3.0F, ForceMode.Force);
 				float proximity = (transform.position - hit.transform.position).magnitude;
-				float effect = 1 - (proximity / radius);
+				float effect = System.Math.Abs(1 - (proximity / radius));
 				hit.SendMessage ("doDamage", effect*gdamage, SendMessageOptions.DontRequireReceiver); 
 			} 
 		}
