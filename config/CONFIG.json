@@ -1,6 +1,6 @@
 {
 	"recorder_output_file" : "data4.txt",
-	"neural_train_file" : "data4.txt",
+	"neural_train_file" : "good_flatland.txt",
 	"neural_serialized_file" : "good_flatland.bin",
 	"training_epochs" : 3000,
 	"num_hidden_nodes" : 50

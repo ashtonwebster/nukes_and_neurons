@@ -24,6 +24,7 @@ public class MenuProgression : MonoBehaviour {
 	private string menuStep = "init";
 	private int menuChosen = 0;
 	private string currentWorld = "menus";
+	private int currentWorldInt = -1;
 	// Use this for initialization
 	void Start () {
 		createMenuController ();
@@ -39,8 +40,14 @@ public class MenuProgression : MonoBehaviour {
 
 	GameObject getRandomPlayWorld() {
 		string[] worlds = {"Forest", "City", "StarWars"};
-		this.currentWorld = worlds[Random.Range (0, worlds.Length)];
-
+		if (this.currentWorldInt == -1) {
+			this.currentWorldInt = Random.Range (0, worlds.Length);
+		} else {
+			this.currentWorldInt = (this.currentWorldInt + 1) % worlds.Length;
+		}
+		Debug.Log (string.Format ("Current world {0}", this.currentWorldInt));
+		// pick current world randomly the first time and then increment
+		this.currentWorld = worlds [this.currentWorldInt];
 		if (currentWorld == "Forest") {
 			return forwestWorldPrefab;
 		} else if (currentWorld == "City") {
@@ -120,9 +127,12 @@ public class MenuProgression : MonoBehaviour {
 			if (choice == 1) {
 				menuStep = "train";
 				this.world = Instantiate(flatworldPrefab);
-				this.world.GetComponent<Initialization> ().player1Prefab = humanController;
-				this.world.GetComponent<Initialization> ().player2Prefab = humanController;
-				this.world.GetComponent<Initialization> ().isPlayer2Recording = true;
+				Initialization i = this.world.GetComponent<Initialization> ();
+				i.currentWorldName = this.currentWorld;
+				i.setPrefab (1, humanController);
+				i.setPrefab (2, humanController);
+				i.beginDelayedSpawn ();
+				i.isPlayer2Recording = true;
 				lerpMenuController = true;
 			} else if (choice == 2) {
 				menuStep = "play";
