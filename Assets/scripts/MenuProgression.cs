@@ -138,16 +138,21 @@ public class MenuProgression : MonoBehaviour {
 			if (choice != 0) {
 				menuStep = "gameMode";
 				this.lerpMenuController = true;
-
 			}
 			if (choice == 1) { //1v1 chosen
 				this.world = Instantiate (getRandomPlayWorld());
-				this.world.GetComponent<Initialization> ().player2Prefab = humanController;
-				this.world.GetComponent<Initialization> ().player1Prefab = humanController;
+				Initialization i = this.world.GetComponent<Initialization> ();
+				i.currentWorldName = this.currentWorld;
+				i.setPrefab (1, humanController);
+				i.setPrefab (2, humanController);
+				i.beginDelayedSpawn ();
 			} else if (choice == 2) { //ai chosen
 				this.world = Instantiate(flatworldPrefab);
-				this.world.GetComponent<Initialization> ().player1Prefab = aiController;
-				this.world.GetComponent<Initialization> ().player2Prefab = humanController;
+				Initialization i = this.world.GetComponent<Initialization> ();
+				i.currentWorldName = this.currentWorld;
+				i.setPrefab (1, aiController);
+				i.setPrefab (2, humanController);
+				i.beginDelayedSpawn ();
 			}
 		} else if (menuStep == "gameMode") {
 			if (lerpMenuController) {
@@ -155,7 +160,7 @@ public class MenuProgression : MonoBehaviour {
 				Invoke("destroyMenuController", 2);
 			}
 		}
-		if (Input.GetKeyDown (KeyCode.Escape)) {
+		if (Input.GetKeyDown (KeyCode.Q)) {
 			world.GetComponent<Initialization> ().teardown ();
 			createMenuController ();
 			initMenus = true;

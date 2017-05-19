@@ -12,11 +12,24 @@ public class Initialization : MonoBehaviour {
 	private ColoredCubesVolume coloredCubesVolume;
 	public int numPlayers = 2;
 	private GameObject player1, player2;
+	public string currentWorldName;
+
 	// Use this for initialization
 	void Start () {
 		world = gameObject;
 		coloredCubesVolume = gameObject.GetComponent<ColoredCubesVolume>();
+	}
+
+	public void beginDelayedSpawn() {
 		Invoke ("spawn", 2); 
+	}
+
+	public void setPrefab(int playerNum, GameObject prefab) {
+		if (playerNum == 1) {
+			this.player1Prefab = prefab;
+		} else if (playerNum == 2) {
+			this.player2Prefab = prefab;
+		}
 	}
 
 	Vector3 getSpawnPos() {
@@ -34,10 +47,17 @@ public class Initialization : MonoBehaviour {
 		Destroy (gameObject);
 	}
 
+	public void setGravity(GameObject player) {
+		if (this.currentWorldName == "StarWars") {
+			player.GetComponent<GenericFirstPersonController> ().m_GravityMultiplier = 0.5f;
+		}
+	}
+
 	public void initPlayer1() {
 		this.player1 = Instantiate(player1Prefab, getSpawnPos(), Quaternion.identity);
 		this.player1.GetComponentInChildren<Camera> ().rect = new Rect (0, 0, 0.5f, 1);
 		this.player1.GetComponent<Player> ().setColoredCubes (world);
+		setGravity (this.player1);
 		if (this.player2 != null) {
 			this.player2.GetComponent<HumanController> ().recorder.goal = this.player1;
 		}
@@ -52,6 +72,7 @@ public class Initialization : MonoBehaviour {
 		this.player2.GetComponent<HumanController> ().usingJoystick = false;
 		this.player2.GetComponentInChildren<Camera> ().rect = new Rect (0.5f, 0, 1, 1);
 		player2.GetComponent<Player> ().playerNum = 2;
+		setGravity (this.player2);
 	}
 
 	void spawn() {

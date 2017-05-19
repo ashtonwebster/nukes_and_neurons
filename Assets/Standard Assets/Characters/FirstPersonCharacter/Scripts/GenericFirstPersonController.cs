@@ -20,7 +20,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] [Range(0f, 1f)] protected float m_RunstepLenghten;
         [SerializeField] protected float m_JumpSpeed;
         [SerializeField] protected float m_StickToGroundForce;
-        [SerializeField] protected float m_GravityMultiplier;
+        [SerializeField] public float m_GravityMultiplier;
         [SerializeField] protected MouseLook _m_MouseLook;
         [SerializeField] protected bool m_UseFovKick;
         [SerializeField] protected FOVKick m_FovKick = new FOVKick();
@@ -296,6 +296,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 return;
             }
+			Debug.Log (body);
+			Debug.Log (m_CharacterController);
+			if (m_CharacterController == null) {
+				Debug.Log ("was null, trying again");
+
+
+				m_CharacterController = GetComponent<CharacterController> ();
+			}
+			Debug.Log (m_CharacterController);
+
+			Debug.Log (hit);
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
         }
     }
